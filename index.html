@@ -19,7 +19,7 @@
           }
         };
     </script>
-        <script src='//libtl.com/sdk.js' data-zone='9880333' data-sdk='show_9880333'></script>
+                <script src='//libtl.com/sdk.js' data-zone='9880333' data-sdk='show_9880333'></script>
     <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
     <style>
         :root {
@@ -65,7 +65,6 @@
         .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
         .bottom-nav { box-shadow: 0 -2px 15px rgba(0,0,0,0.2); }
         
-        /* --- MODIFIED: Simplified Bottom Nav Styles --- */
         .bottom-nav-item i, .bottom-nav-item span {
             transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
         }
@@ -111,11 +110,10 @@
              border-bottom: 1px solid var(--border);
         }
         .subject-content-viewer .content-body-wrapper {
-    flex-grow: 1;
-    overflow-y: auto;
-    /* This removes all top/bottom padding */
-    padding: 0 1.5rem; 
-}
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0 1.5rem; 
+        }
         .subject-content-viewer .content-body {
             line-height: 1.8; 
             font-size: 1.1rem;
@@ -141,7 +139,6 @@
         .chat-bubble-other { background-color: #334155; }
         .message-status-icon { font-size: 0.75rem; }
 
-        /* --- NEW: Chat Bubble Notification Styles --- */
         #new-message-bubble {
             background-color: var(--primary);
             color: #1E293B;
@@ -157,9 +154,14 @@
             transform: translateY(0);
             opacity: 1;
         }
-
-        
-
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-main);
+            padding-top: 1.5rem;
+            padding-bottom: 1rem;
+            z-index: 10;
+        }
     </style>
 </head>
 <body class="overscroll-none">
@@ -199,6 +201,14 @@
             <p class="text-center text-sm text-gray-400 mt-6">
                 <a href="#" id="no-account-link" class="hover:text-amber-400 hover:underline">Don't have an account? Get details</a>
             </p>
+            
+            <div class="relative flex py-5 items-center">
+                <div class="flex-grow border-t border-slate-600"></div>
+                <span class="flex-shrink mx-4 text-gray-400 text-sm">OR</span>
+                <div class="flex-grow border-t border-slate-600"></div>
+            </div>
+            <button id="free-version-btn" class="w-full bg-slate-700 hover:bg-slate-600 text-gray-200 font-bold py-3 rounded-lg text-lg transition-colors">Try Free Version</button>
+
         </div>
 
         <div id="pin-only-login-view" class="hidden">
@@ -351,34 +361,36 @@
                     </div>
 
                    <div id="questions-2025-page" class="hidden fade-in-up">
-    
-    <div class="sticky-header">
-        <h2 id="questions-2025-title" class="font-bold text-gray-100 mb-4" style="font-size: 0.92rem;"></h2>
-        <div class="flex justify-between items-center gap-4">
-            <div class="relative flex-grow">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span>
-                <input type="text" id="questions-2025-search" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Search for a subject...">
-            </div>
-            <div id="questions-2025-count" class="text-gray-400 font-semibold flex-shrink-0"></div>
-        </div>
-    </div>
-    <div id="questions-2025-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6"></div>
-</div>
+                        <div class="sticky top-0 bg-inherit -mx-4 sm:-mx-6 px-4 sm:px-6 pt-4">
+                            <div class="bg-inherit pb-4">
+                               <h2 id="questions-2025-title" class="font-bold text-gray-100 mb-4" style="font-size: 0.92rem;"></h2>
+                                <div class="flex justify-between items-center gap-4">
+                                    <div class="relative flex-grow">
+                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span>
+                                        <input type="text" id="questions-2025-search" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Search for a subject...">
+                                    </div>
+                                    <div id="questions-2025-count" class="text-gray-400 font-semibold flex-shrink-0"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="questions-2025-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
 
                     <div id="wassce-trial-page" class="hidden fade-in-up">
-
-    <div class="sticky-header">
-        <h2 id="wassce-trial-title" class="font-bold text-gray-100 mb-4" style="font-size: 0.92rem;"></h2>
-        <div class="flex justify-between items-center gap-4">
-            <div class="relative flex-grow">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span>
-                <input type="text" id="wassce-trial-search" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Search for a subject...">
-            </div>
-            <div id="wassce-trial-count" class="text-gray-400 font-semibold flex-shrink-0"></div>
-        </div>
-    </div>
-    <div id="wassce-trial-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6"></div>
-</div>
+                        <div class="sticky top-0 bg-inherit -mx-4 sm:-mx-6 px-4 sm:px-6 pt-4">
+                             <div class="bg-inherit pb-4">
+                                <h2 id="wassce-trial-title" class="font-bold text-gray-100 mb-4" style="font-size: 0.92rem;"></h2>
+                                <div class="flex justify-between items-center gap-4">
+                                    <div class="relative flex-grow">
+                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span>
+                                        <input type="text" id="wassce-trial-search" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Search for a subject...">
+                                    </div>
+                                    <div id="wassce-trial-count" class="text-gray-400 font-semibold flex-shrink-0"></div>
+                                </div>
+                             </div>
+                        </div>
+                        <div id="wassce-trial-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
                     
                     <div id="about-page" class="hidden fade-in-up bg-slate-800 p-6 rounded-lg shadow-md max-w-3xl mx-auto">
                         <h2 class="text-2xl font-bold text-gray-100 mb-4">About Wassce Questions</h2>
@@ -473,7 +485,7 @@
 </div>
 
 <div id="new-message-bubble" class="fixed bottom-20 right-4 z-[99] cursor-pointer hidden">
-    </div>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -481,14 +493,14 @@
     import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     
     // Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCYqFoObiDHR7sUxdTIpJVtnLWXZOINX3I",
-  authDomain: "godisgreat-9d1b2.firebaseapp.com",
-  projectId: "godisgreat-9d1b2",
-  storageBucket: "godisgreat-9d1b2.firebasestorage.app",
-  messagingSenderId: "713822591014",
-  appId: "1:713822591014:web:e1bf134fa6f916a6a16ee7"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyCYqFoObiDHR7sUxdTIpJVtnLWXZOINX3I",
+      authDomain: "godisgreat-9d1b2.firebaseapp.com",
+      projectId: "godisgreat-9d1b2",
+      storageBucket: "godisgreat-9d1b2.firebasestorage.app",
+      messagingSenderId: "713822591014",
+      appId: "1:713822591014:web:e1bf134fa6f916a6a16ee7"
+    };
 
     // --- Initialize Firebase ---
     const app = initializeApp(firebaseConfig);
@@ -550,7 +562,7 @@ const firebaseConfig = {
     }
 
     async function setUserOnlineStatus(isOnline) {
-        if (!currentUserId) return;
+        if (!currentUserId || currentUserData.isGuest) return; // Guests are not tracked
         userStatusRef = doc(db, 'status', currentUserId);
         try {
             await setDoc(userStatusRef, { isOnline, lastSeen: serverTimestamp() });
@@ -558,20 +570,26 @@ const firebaseConfig = {
             console.error("Could not set user status: ", e);
         }
     }
-
-    async function transitionToMainApp(userId) {
+    
+    async function transitionToMainApp(userId, isGuest = false) {
         currentUserId = userId;
-        localStorage.setItem('loggedInUserId', currentUserId);
-        
-        await loadUserData();
-        
-        if (currentUserData && currentUserData.username) {
-            localStorage.setItem('lastUsername', currentUserData.username);
+
+        if (!isGuest) {
+            localStorage.setItem('loggedInUserId', currentUserId);
+            await loadUserData();
+            if (currentUserData && currentUserData.username) {
+                localStorage.setItem('lastUsername', currentUserData.username);
+            }
+        } else {
+            currentUserData.isGuest = true;
+            updateUIForUser();
         }
-        
+
         await fetchRemoteContent();
         updateUserUIState();
-        setUserOnlineStatus(true);
+        if (!isGuest) {
+            setUserOnlineStatus(true);
+        }
         listenForNotifications();
         listenForUnreadChatroomMessages();
         
@@ -581,8 +599,8 @@ const firebaseConfig = {
         getEl('access-code-screen').classList.add('hidden');
         getEl('main-app').classList.remove('hidden');
         getEl('main-app').classList.add('flex');
-        
-// ================== 2. AD FUNCTION CALLED HERE ==================
+
+        // ================== 2. AD FUNCTION CALLED HERE ==================
         // We call the ad function after the user logs in and the main app is ready.
         if (typeof show_9880333 === 'function') {
             show_9880333({
@@ -603,6 +621,19 @@ const firebaseConfig = {
         const hash = window.location.hash.substring(1) || 'home';
         showPage(hash);
     }
+    
+    async function handleFreeVersionLogin() {
+        currentUserId = `guest_${crypto.randomUUID()}`;
+        currentUserData = {
+            name: 'Guest User',
+            username: 'guest',
+            userType: 'basic',
+            isGuest: true,
+            isDeviceRegistered: false 
+        };
+        await transitionToMainApp(currentUserId, true);
+    }
+
 
     async function handleLogin() {
         const username = getEl('username-input').value.trim();
@@ -679,7 +710,7 @@ const firebaseConfig = {
             const deviceId = getDeviceId();
 
             if (userData.isDeviceRegistered && userData.deviceId && userData.deviceId !== deviceId) {
-               throw new Error("This account is locked to another device. Please log in with the correct account.");
+                 throw new Error("This account is locked to another device. Please log in with the correct account.");
             }
 
             const credentialsRef = collection(db, 'credentials');
@@ -757,6 +788,7 @@ const firebaseConfig = {
             const userDoc = await getDoc(userDocRef);
             if (userDoc.exists()) {
                 currentUserData = userDoc.data();
+                currentUserData.isGuest = false; // Ensure this is set for logged-in users
                 updateUIForUser();
             } else {
                 console.error("User document not found!");
@@ -779,7 +811,6 @@ const firebaseConfig = {
         getEl('profile-username-display').textContent = currentUserData.username || 'N/A';
         getEl('profile-uid-display').textContent = currentUserId;
 
-        // Update user status display on profile page
         const statusEl = getEl('profile-status-display');
         if (currentUserData.userType === 'premium') {
             statusEl.textContent = 'Premium User';
@@ -791,10 +822,10 @@ const firebaseConfig = {
     }
     
     function updateUserUIState() {
-        if (currentUserData && currentUserData.isDeviceRegistered) {
-            getEl('logout-btn').classList.add('hidden');
-        } else {
+        if (currentUserData.isGuest || !currentUserData.isDeviceRegistered) {
             getEl('logout-btn').classList.remove('hidden');
+        } else {
+            getEl('logout-btn').classList.add('hidden');
         }
     }
 
@@ -873,94 +904,115 @@ const firebaseConfig = {
         getEl('main-app').classList.remove('hidden');
     }
     
-    // REPLACE your old loadSubjects function with this new one
-async function loadSubjects(collectionName, containerId, forceRefresh = false) {
-    const container = getEl(containerId);
-    if (!forceRefresh && container.children.length > 0 && !container.innerHTML.includes('fa-spinner')) return;
-
-    container.innerHTML = `<div class="text-center text-gray-400 col-span-full"><i class="fas fa-spinner fa-spin mr-2"></i>Loading Subjects...</div>`;
-
-    try {
-        const allSubjects = await fetchAllSubjects(forceRefresh);
-        const filteredSubjects = allSubjects.filter(s => s.category === collectionName);
-
-        const unlockedSubjectsRef = collection(db, 'users', currentUserId, 'unlocked_subjects');
-        const unlockedSnapshot = await getDocs(unlockedSubjectsRef);
-        const unlockedSubjectIds = new Set(unlockedSnapshot.docs.map(doc => doc.id));
-
+    async function loadSubjects(collectionName, containerId, forceRefresh = false) {
+        const container = getEl(containerId);
+        const isGuest = currentUserData.isGuest === true;
         const pagePrefix = containerId.replace('-container', '');
         const countEl = getEl(`${pagePrefix}-count`);
         const searchInput = getEl(`${pagePrefix}-search`);
 
-        const drawSubjects = (searchTerm = '') => {
-            container.innerHTML = '';
-            const searchLower = searchTerm.toLowerCase();
-
-            const subjectsToDisplay = filteredSubjects.filter(subject => 
-                subject.name.toLowerCase().includes(searchLower)
-            );
-            
-            if (countEl) {
-                countEl.textContent = `Total: ${subjectsToDisplay.length}`;
-            }
-
-            if (subjectsToDisplay.length === 0) {
-                container.innerHTML = `<p class="text-gray-400 text-center col-span-full">No subjects found.</p>`;
-                return;
-            }
-
-            subjectsToDisplay.sort((a,b) => a.name.localeCompare(b.name)).forEach(subject => {
-                const isUnlocked = unlockedSubjectIds.has(subject.id);
-                const card = document.createElement('div');
-                card.className = `subject-card bg-slate-800 rounded-lg p-4 flex items-center cursor-pointer`;
-                
-                const iconClass = subject.icon || 'fa-book';
-                const iconColor = subject.color || 'text-amber-400';
-
-                card.innerHTML = `
-                    <div class="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                        <i class="fas ${iconClass} text-2xl ${iconColor}"></i>
-                    </div>
-                    <div class="flex-grow">
-                        <h5 class="font-bold text-sm text-gray-200">${subject.name}</h5>
-                        ${subject.tag ? `<span class="mt-1 inline-block bg-yellow-500 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">${subject.tag}</span>` : ''}
-                    </div>
-                    <div class="flex items-center justify-center p-2 rounded-full text-xs ml-4 ${isUnlocked ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}">
-                        <i class="fas ${isUnlocked ? 'fa-lock-open' : 'fa-lock'} text-xs mr-2"></i>
-                        <span>${isUnlocked ? 'Unlocked' : 'Locked'}</span>
-                    </div>
-                `;
-
-                card.addEventListener('click', () => {
-                    if (isUnlocked) {
-                        showSubjectViewer(subject.id, collectionName);
-                    } else {
-                        showCustomAlert('Access Denied', `Please contact the administrator to unlock ${subject.name}.`, 'fas fa-exclamation-circle text-red-400');
-                    }
-                });
-
-                container.appendChild(card);
-            });
-        };
-
-        // Initial draw of all subjects
-        drawSubjects();
-
-        // Add event listener for the search input
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                drawSubjects(e.target.value);
-            });
+        if (isGuest && collectionName === 'questions_2025') {
+            container.innerHTML = `<p class="text-gray-400 text-center col-span-full pt-6">This section is for registered users only. Please contact the admin to get an account.</p>`;
+            if(countEl) countEl.textContent = 'Total: 0';
+            if(searchInput) searchInput.disabled = true;
+            return;
         }
+        if (searchInput) searchInput.disabled = false;
 
-    } catch (error) {
-        console.error(`Error loading subjects from ${collectionName}:`, error);
-        container.innerHTML = `<p class="text-red-400 text-center col-span-full">Could not load subjects. Please try again later.</p>`;
+
+        if (!forceRefresh && container.children.length > 0 && !container.innerHTML.includes('fa-spinner')) return;
+        container.innerHTML = `<div class="text-center text-gray-400 col-span-full"><i class="fas fa-spinner fa-spin mr-2"></i>Loading Subjects...</div>`;
+
+        try {
+            const allSubjects = await fetchAllSubjects(forceRefresh);
+            const filteredSubjects = allSubjects.filter(s => s.category === collectionName);
+
+            let unlockedSubjectIds = new Set();
+            if (!isGuest) {
+                const unlockedSubjectsRef = collection(db, 'users', currentUserId, 'unlocked_subjects');
+                const unlockedSnapshot = await getDocs(unlockedSubjectsRef);
+                unlockedSubjectIds = new Set(unlockedSnapshot.docs.map(doc => doc.id));
+            }
+
+            const drawSubjects = (searchTerm = '') => {
+                container.innerHTML = '';
+                const searchLower = searchTerm.toLowerCase();
+
+                const subjectsToDisplay = filteredSubjects.filter(subject => 
+                    subject.name.toLowerCase().includes(searchLower)
+                );
+                
+                if (countEl) {
+                    countEl.textContent = `Total: ${subjectsToDisplay.length}`;
+                }
+
+                if (subjectsToDisplay.length === 0) {
+                    container.innerHTML = `<p class="text-gray-400 text-center col-span-full">No subjects found.</p>`;
+                    return;
+                }
+
+                subjectsToDisplay.sort((a,b) => a.name.localeCompare(b.name)).forEach((subject, index) => {
+                    let isUnlocked;
+                    if (isGuest) {
+                        isUnlocked = collectionName === 'wassce_trial_questions' && index < 2;
+                    } else {
+                        isUnlocked = unlockedSubjectIds.has(subject.id);
+                    }
+                    
+                    const card = document.createElement('div');
+                    card.className = `subject-card bg-slate-800 rounded-lg p-4 flex items-center cursor-pointer`;
+                    
+                    const iconClass = subject.icon || 'fa-book';
+                    const iconColor = subject.color || 'text-amber-400';
+
+                    card.innerHTML = `
+                        <div class="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                            <i class="fas ${iconClass} text-2xl ${iconColor}"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <h5 class="font-bold text-sm text-gray-200">${subject.name}</h5>
+                            ${subject.tag ? `<span class="mt-1 inline-block bg-yellow-500 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">${subject.tag}</span>` : ''}
+                        </div>
+                        <div class="flex items-center justify-center p-2 rounded-full text-xs ml-4 ${isUnlocked ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}">
+                            <i class="fas ${isUnlocked ? 'fa-lock-open' : 'fa-lock'} text-xs mr-2"></i>
+                            <span>${isUnlocked ? 'Unlocked' : 'Locked'}</span>
+                        </div>
+                    `;
+
+                    card.addEventListener('click', () => {
+                        if (isUnlocked) {
+                            showSubjectViewer(subject.id, collectionName);
+                        } else {
+                            showCustomAlert('Access Denied', `This content is for premium users. Please contact the administrator to get an account.`, 'fas fa-gem text-amber-400');
+                        }
+                    });
+
+                    container.appendChild(card);
+                });
+            };
+
+            drawSubjects();
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    drawSubjects(e.target.value);
+                });
+            }
+
+        } catch (error) {
+            console.error(`Error loading subjects from ${collectionName}:`, error);
+            container.innerHTML = `<p class="text-red-400 text-center col-span-full">Could not load subjects. Please try again later.</p>`;
+        }
     }
-}
+
 
     async function loadVideos(forceRefresh = false) {
-        if (!forceRefresh && videos.length > 0) return;
+        if (!forceRefresh && videos.length > 0) {
+            buildPlaylistUI(getEl('desktop-playlist-wrapper'));
+            buildPlaylistUI(getEl('mobile-playlist-wrapper'));
+            playVideo(0);
+            return;
+        }
 
         try {
             const querySnapshot = await getDocs(query(collection(db, "videos"), orderBy("order")));
@@ -970,10 +1022,10 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
             buildPlaylistUI(getEl('mobile-playlist-wrapper'));
 
             if (videos.length > 0) {
-                 playVideo(0);
+                playVideo(0);
             } else {
-                 getEl('video-title').textContent = 'No videos available.';
-                 getEl('video-description').textContent = 'Please check back later.';
+                getEl('video-title').textContent = 'No videos available.';
+                getEl('video-description').textContent = 'Please check back later.';
             }
         } catch (error) {
             console.error("Error fetching videos: ", error);
@@ -985,13 +1037,29 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
         container.innerHTML = `<h3 class="text-xl font-bold mb-4 text-gray-100">Playlist (${videos.length})</h3><div class="video-playlist space-y-2"></div>`;
         const playlistEl = container.querySelector('.video-playlist');
         playlistEl.innerHTML = ''; 
+        const userType = currentUserData.userType;
+        const videoLimit = 3; 
+
         videos.forEach((video, index) => {
+            const isLocked = userType === 'basic' && index >= videoLimit;
             const videoItem = document.createElement('a');
             videoItem.href = "#";
             videoItem.className = 'playlist-item block p-3 rounded-lg hover:bg-slate-700 transition border-l-4 border-transparent';
             videoItem.dataset.id = video.id;
-            videoItem.innerHTML = `<p class="font-semibold text-sm text-gray-300">${video.title}</p>`;
-            videoItem.addEventListener('click', (e) => { e.preventDefault(); playVideo(index); });
+            videoItem.innerHTML = `
+                <p class="font-semibold text-sm text-gray-300 flex justify-between items-center">
+                    <span>${video.title}</span>
+                    ${isLocked ? '<i class="fas fa-lock text-amber-400"></i>' : ''}
+                </p>`;
+                
+            videoItem.addEventListener('click', (e) => { 
+                e.preventDefault(); 
+                if (isLocked) {
+                    showCustomAlert('Premium Feature', 'Unlock all videos by getting an account. Contact the admin for details.', 'fas fa-gem text-amber-400');
+                    return;
+                }
+                playVideo(index); 
+            });
             playlistEl.appendChild(videoItem);
         });
     }
@@ -1073,14 +1141,22 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
 
         try {
             const allSubjects = await fetchAllSubjects();
-            const unlockedSubjectsRef = collection(db, 'users', currentUserId, 'unlocked_subjects');
-            const unlockedSnapshot = await getDocs(unlockedSubjectsRef);
-            const unlockedSubjectIds = new Set(unlockedSnapshot.docs.map(doc => doc.id));
+            let unlockedSubjectIds = new Set();
+            if (!currentUserData.isGuest) {
+                 const unlockedSubjectsRef = collection(db, 'users', currentUserId, 'unlocked_subjects');
+                 const unlockedSnapshot = await getDocs(unlockedSubjectsRef);
+                 unlockedSubjectIds = new Set(unlockedSnapshot.docs.map(doc => doc.id));
+            }
 
             const unlockedSubjects = allSubjects.filter(subject => unlockedSubjectIds.has(subject.id));
             const subjectsToShow = unlockedSubjects.slice(0, 3);
 
             container.innerHTML = '';
+            if (currentUserData.isGuest) {
+                 container.innerHTML = `<p class="text-gray-400 text-center p-4">Get a premium account to unlock subjects.</p>`;
+                 return;
+            }
+
             if (subjectsToShow.length === 0) {
                  container.innerHTML = `<p class="text-gray-400 text-center p-4">No subjects unlocked yet. Contact admin.</p>`;
                  return;
@@ -1175,7 +1251,7 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
         `;
         getEl('messages-container').appendChild(msgDiv);
 
-        if (!isUser && data.status !== 'read') {
+        if (!isUser && data.status !== 'read' && !currentUserData.isGuest) {
             const msgRef = doc(db, 'chats', currentUserId, 'messages', id);
              updateDoc(msgRef, { status: 'read' });
         }
@@ -1206,6 +1282,7 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
 
     function listenForUnreadMessages() {
         if (unreadListener) unreadListener(); 
+        if (currentUserData.isGuest) return;
 
         const messagesRef = collection(db, 'chats', currentUserId, 'messages');
         const q = query(messagesRef, where('senderId', '==', 'admin'), where('status', '!=', 'read'));
@@ -1221,14 +1298,11 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
             }
         });
     }
-
-    // --- UPDATED AND NEW FUNCTIONS ---
-
+    
     function showChatroomPage() {
         getEl('main-app').classList.add('hidden');
         getEl('chatroom-page').classList.remove('hidden');
 
-        // Hide the notification bubble when entering the chatroom
         const bubble = getEl('new-message-bubble');
         if (bubble) {
             bubble.classList.remove('visible');
@@ -1263,9 +1337,10 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
             container.scrollTop = container.scrollHeight;
         });
         
-        // Mark as read
-        const userDocRef = doc(db, 'users', currentUserId);
-        updateDoc(userDocRef, { lastChatroomReadTimestamp: serverTimestamp() });
+        if (!currentUserData.isGuest) {
+            const userDocRef = doc(db, 'users', currentUserId);
+            updateDoc(userDocRef, { lastChatroomReadTimestamp: serverTimestamp() });
+        }
     }
 
     function hideChatroomPage() {
@@ -1287,7 +1362,7 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
             premiumLockOverlay = `
                 <div class="absolute inset-0 flex items-center justify-center">
                      <span class="text-xs text-amber-300 font-semibold bg-black/50 px-2 py-1 rounded-md">
-                         <i class="fas fa-gem mr-1"></i> Premium
+                          <i class="fas fa-gem mr-1"></i> Premium
                      </span>
                 </div>`;
         }
@@ -1338,6 +1413,7 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
 
     async function listenForUnreadChatroomMessages() {
         if (unreadChatroomListener) unreadChatroomListener();
+        if(currentUserData.isGuest) return;
 
         const userDoc = await getDoc(doc(db, 'users', currentUserId));
         const lastRead = userDoc.data()?.lastChatroomReadTimestamp || null;
@@ -1359,6 +1435,7 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
 
     async function listenForNotifications() {
         if (notificationsListener) notificationsListener();
+        if(currentUserData.isGuest) return;
 
         const userDoc = await getDoc(doc(db, 'users', currentUserId));
         const lastRead = userDoc.data()?.lastNotificationReadTimestamp || null;
@@ -1402,10 +1479,11 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
                 });
             }
 
-            // Mark all as read by updating the user's timestamp
-            await updateDoc(doc(db, 'users', currentUserId), {
-                lastNotificationReadTimestamp: serverTimestamp()
-            });
+            if(!currentUserData.isGuest){
+                await updateDoc(doc(db, 'users', currentUserId), {
+                    lastNotificationReadTimestamp: serverTimestamp()
+                });
+            }
 
         } catch (error) {
             console.error("Error fetching notifications:", error);
@@ -1465,8 +1543,8 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
         getEl('notification-btn').addEventListener('click', () => window.location.hash = 'notifications');
         getEl('chatroom-message-form').addEventListener('submit', handleSendChatroomMessage);
         
-        // --- ADDED ---
         getEl('new-message-bubble').addEventListener('click', () => window.location.hash = 'chatroom');
+        getEl('free-version-btn').addEventListener('click', handleFreeVersionLogin);
 
         getEl('chatroom-back-btn').addEventListener('click', () => {
             hideChatroomPage();
@@ -1558,10 +1636,4 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
     });
 </script>
 </body>
-
 </html>
-
-
-
-
-
