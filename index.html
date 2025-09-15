@@ -582,6 +582,24 @@ const firebaseConfig = {
         getEl('main-app').classList.remove('hidden');
         getEl('main-app').classList.add('flex');
         
+// ================== 2. AD FUNCTION CALLED HERE ==================
+        // We call the ad function after the user logs in and the main app is ready.
+        if (typeof show_9880333 === 'function') {
+            show_9880333({
+                type: 'inApp',
+                inAppSettings: {
+                    frequency: 2,
+                    capping: 0.1,
+                    interval: 30,
+                    timeout: 5,
+                    everyPage: false
+                }
+            });
+        } else {
+            console.log("Ad function not available yet.");
+        }
+        // ===============================================================
+        
         const hash = window.location.hash.substring(1) || 'home';
         showPage(hash);
     }
@@ -1542,6 +1560,7 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
 </body>
 
 </html>
+
 
 
 
