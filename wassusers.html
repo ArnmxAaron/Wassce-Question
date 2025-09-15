@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WASS Pupils</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <style>
+        :root {
+            --bg-main: #021130;
+            --bg-secondary: #1E293B; /* slate-800 */
+            --primary: #FBBF24; /* amber-400 */
+            --primary-dark: #F59E0B; /* amber-500 */
+            --text-primary: #F3F4F6; /* gray-100 */
+            --text-secondary: #9CA3AF; /* gray-400 */
+            --border: #334155; /* slate-700 */
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+        }
+        .sidebar { transition: transform 0.3s ease-in-out; }
+        .sidebar-link { transition: all 0.2s ease; }
+        .sidebar-link.active, .sidebar-link:hover {
+            background-color: var(--primary);
+            color: #1E293B;
+            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.2);
+            transform: translateX(4px);
+        }
+        .sidebar-link.active i, .sidebar-link:hover i { color: #1E293B !important; }
+        .subject-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            border: 1px solid var(--border);
+        }
+        .subject-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+        .subject-card h5 { transition: color 0.2s ease; }
+        .subject-card:hover h5 { color: var(--primary); }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes modalScaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+        .bottom-nav { box-shadow: 0 -2px 15px rgba(0,0,0,0.2); }
+        
+        /* --- MODIFIED: Simplified Bottom Nav Styles --- */
+        .bottom-nav-item i, .bottom-nav-item span {
+            transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+        .bottom-nav-item.active i, .bottom-nav-item.active span {
+            color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .video-playlist a.active {
+            background-color: #334155; /* slate-700 */
+            border-left: 4px solid var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .responsive-video-container {
+            position: relative; overflow: hidden; width: 100%;
+            padding-top: 56.25%; /* 16:9 */
+        }
+        .responsive-video-container iframe {
+            position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            width: 100%; height: 100%;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748B; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .custom-alert-modal { animation: modalFadeIn 0.3s ease-out forwards; }
+        .custom-alert-content { animation: modalScaleUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
+        
+        .subject-content-viewer {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            background-color: var(--bg-main);
+            display: flex;
+            flex-direction: column;
+        }
+        .subject-content-viewer .viewer-header {
+             flex-shrink: 0;
+             padding: 1rem 1.5rem;
+             border-bottom: 1px solid var(--border);
+        }
+        .subject-content-viewer .content-body-wrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    /* This removes all top/bottom padding */
+    padding: 0 1.5rem; 
+}
+        .subject-content-viewer .content-body {
+            line-height: 1.8; 
+            font-size: 1.1rem;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+        }
+        .subject-content-viewer .content-body img {
+            pointer-events: none;
+        }
+        .subject-content-viewer .content-body h1,
+        .subject-content-viewer .content-body h2,
+        .subject-content-viewer .content-body h3 {
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        .subject-content-viewer .content-body p { margin-bottom: 1em; }
+        .subject-content-viewer .content-body ul { list-style-type: disc; padding-left: 2em; margin-bottom: 1em; }
+
+        .chat-bubble-user { background-color: var(--primary); color: #1E293B; }
+        .chat-bubble-other { background-color: #334155; }
+        .message-status-icon { font-size: 0.75rem; }
+
+        /* --- NEW: Chat Bubble Notification Styles --- */
+        #new-message-bubble {
+            background-color: var(--primary);
+            color: #1E293B;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            transform: translateY(1rem);
+            opacity: 0;
+        }
+        #new-message-bubble.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        
+
+    </style>
+</head>
+<body class="overscroll-none">
+
+<div id="custom-alert-modal" class="custom-alert-modal fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[100] hidden">
+    <div class="custom-alert-content bg-slate-800 rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-sm m-4 text-center border border-slate-700">
+        <div id="custom-alert-icon" class="text-5xl mb-4"></div>
+        <h3 id="custom-alert-title" class="text-xl font-bold text-gray-100 mb-2">Alert</h3>
+        <p id="custom-alert-message" class="text-gray-300 mb-6">This is an alert message.</p>
+        <button id="custom-alert-close-btn" class="w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-2.5 rounded-lg transition-colors">OK</button>
+    </div>
+</div>
+
+<div id="login-screen" class="hidden items-center justify-center min-h-screen p-4 text-center">
+    <div class="w-full max-w-md">
+        <div id="full-login-view">
+            <i class="fas fa-graduation-cap text-5xl text-amber-400 mb-4"></i>
+            <h1 id="login-header-text" class="text-3xl font-bold text-gray-100 mb-2">WASS Pupils</h1>
+            <p id="login-subheader-text" class="text-gray-400 mb-8">Please enter your credentials to continue.</p>
+            <div class="space-y-6 text-left">
+                <div>
+                    <label for="username-input" class="block text-sm font-medium text-gray-300 mb-2">Username</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-user text-gray-400"></i></span>
+                        <input type="text" id="username-input" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Enter your username">
+                    </div>
+                </div>
+                <div>
+                    <label for="pin-input" class="block text-sm font-medium text-gray-300 mb-2">PIN</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-key text-gray-400"></i></span>
+                        <input type="password" id="pin-input" maxlength="6" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Enter your PIN">
+                    </div>
+                </div>
+            </div>
+            <button id="login-btn" class="mt-8 w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-3 rounded-lg text-lg transition-colors shadow-lg shadow-amber-500/20">Login</button>
+            <p class="text-center text-sm text-gray-400 mt-6">
+                <a href="#" id="no-account-link" class="hover:text-amber-400 hover:underline">Don't have an account? Get details</a>
+            </p>
+        </div>
+
+        <div id="pin-only-login-view" class="hidden">
+            <img id="pin-login-avatar" src="" alt="User Avatar" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-slate-700">
+            <h1 id="pin-login-welcome-text" class="text-3xl font-bold text-gray-100 mb-2">Welcome Back!</h1>
+            <p class="text-gray-400 mb-8">Please enter your PIN to continue.</p>
+            <div class="space-y-6 text-left">
+                <div>
+                    <label for="pin-only-input" class="block text-sm font-medium text-gray-300 mb-2">PIN</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-key text-gray-400"></i></span>
+                        <input type="password" id="pin-only-input" maxlength="6" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Enter your PIN">
+                    </div>
+                </div>
+            </div>
+            <button id="pin-login-btn" class="mt-8 w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-3 rounded-lg text-lg transition-colors shadow-lg shadow-amber-500/20">Unlock</button>
+             <p class="text-center text-sm text-gray-400 mt-6">
+                <a href="#" id="switch-account-link" class="hover:text-amber-400 hover:underline">Not you? Use another account</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="access-code-screen" class="hidden items-center justify-center min-h-screen p-4 text-center">
+    <div id="access-code-content" class="w-full max-w-md">
+        <i class="fas fa-shield-alt text-5xl text-amber-400 mb-4"></i>
+        <h1 class="text-3xl font-bold text-gray-100 mb-2">Device Activation</h1>
+        <p class="text-gray-400 mb-8">Enter your one-time access code to secure this device to your account.</p>
+        <div class="space-y-6 text-left">
+            <div>
+                <label for="access-code-input" class="block text-sm font-medium text-gray-300 mb-2">Access Code</label>
+                <div class="relative">
+                     <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-ticket-alt text-gray-400"></i></span>
+                    <input type="text" id="access-code-input" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="e.g., ABC-123-XYZ">
+                </div>
+            </div>
+        </div>
+        <button id="activate-btn" class="mt-8 w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-3 rounded-lg text-lg transition-colors shadow-lg shadow-amber-500/20">Activate Device</button>
+    </div>
+</div>
+
+<div id="main-app" class="hidden h-screen flex-col">
+    <div class="flex h-full bg-slate-900">
+        <aside id="sidebar" class="sidebar fixed inset-y-0 left-0 bg-slate-800 w-64 p-6 shadow-lg transform -translate-x-full md:relative md:translate-x-0 z-50 border-r border-slate-700">
+            <div class="flex items-center mb-10">
+                <i class="fas fa-graduation-cap text-3xl text-amber-400"></i>
+                <h1 class="text-2xl font-bold ml-3 text-gray-100">WASS Pupils</h1>
+            </div>
+            <nav class="flex flex-col h-[calc(100%-120px)]">
+                <div class="flex-grow space-y-2">
+                    <a href="#about" class="sidebar-link nav-link flex items-center py-3 px-4 rounded-lg text-gray-300">
+                        <i class="fas fa-info-circle w-6 text-center text-gray-400 text-lg"></i><span class="ml-4 font-medium">About App</span>
+                    </a>
+                </div>
+                <div class="mt-auto">
+                    <a href="#" id="logout-btn" class="sidebar-link flex items-center py-3 px-4 rounded-lg text-red-400 hover:bg-red-500 hover:text-white">
+                        <i class="fas fa-sign-out-alt w-6 text-center text-lg"></i><span class="ml-4 font-medium">Logout</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header id="main-header" class="flex justify-between items-center p-4 sm:p-6 bg-slate-800 border-b border-slate-700">
+                <div class="flex items-center">
+                    <button id="menu-btn" class="text-gray-300 focus:outline-none md:hidden mr-4"><i class="fas fa-bars text-xl"></i></button>
+                    <div>
+                        <h2 id="header-title" class="text-lg sm:text-xl font-bold text-gray-100">Welcome!</h2>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                     <div class="relative">
+                         <button id="notification-btn" class="text-gray-300 text-xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-700 transition-colors">
+                             <i class="fas fa-bell"></i>
+                         </button>
+                         <div id="notification-badge" class="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white hidden"></div>
+                     </div>
+                    <img id="header-profile-pic" src="" alt="Profile" class="w-10 h-10 rounded-full cursor-pointer object-cover ring-2 ring-offset-2 ring-offset-slate-800 ring-transparent hover:ring-amber-400 transition" />
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6 pb-24" style="background-color: #021130;">
+                <div id="main-pages-container">
+                    <div id="home-page" class="hidden fade-in-up space-y-6">
+                         <div class="flex items-center space-x-4">
+                             <img id="home-profile-pic" alt="Profile Picture" class="w-16 h-16 rounded-full object-cover ring-4 ring-amber-400/30">
+                             <div>
+                                 <p class="text-gray-400 text-lg">Welcome Back,</p>
+                                 <h1 id="home-welcome-name" class="text-3xl font-bold text-white"></h1>
+                                 <span id="home-user-status" class="text-xs font-semibold mt-1 px-2 py-0.5 rounded-full inline-block"></span>
+                             </div>
+                         </div>
+
+                        <div id="chat-with-admin-card" class="bg-slate-800 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-slate-700 transition">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-headset text-2xl text-emerald-400"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-md text-gray-200">Support</h5>
+                                    <p class="text-sm text-gray-400">Chat with an Admin</p>
+                                </div>
+                            </div>
+                            <div id="unread-count-badge" class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white hidden">0</div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h2 class="text-lg font-bold text-gray-100">Your Subjects</h2>
+                                <a href="#questions-2025" id="see-all-subjects-link" class="text-amber-400 hover:text-amber-300 font-semibold text-sm">See all</a>
+                            </div>
+                            <div id="unlocked-subjects-container" class="space-y-3"></div>
+                        </div>
+                    </div>
+
+                    <div id="profile-page" class="hidden fade-in-up">
+                        <div id="profile-display-view" class="text-center max-w-md mx-auto p-4 sm:p-8 w-full bg-slate-800 rounded-2xl border border-slate-700">
+                            <h2 class="text-2xl font-bold mb-4 text-gray-100">My Profile</h2>
+                            <div class="flex flex-col items-center space-y-4">
+                                <img id="profile-pic-display" alt="Profile Picture" class="w-32 h-32 rounded-full object-cover ring-4 ring-amber-400/30">
+                                <div class="flex flex-col items-center">
+                                    <h3 id="profile-name-display" class="text-2xl font-bold text-gray-100"></h3>
+                                    <span id="profile-status-display" class="text-sm font-bold mt-1 px-3 py-1 rounded-full"></span>
+                                </div>
+                                <div class="w-full text-left space-y-3 pt-4 border-t border-slate-700">
+                                    <div class="flex justify-between items-center"><span class="text-gray-400 font-medium">Username:</span><span id="profile-username-display" class="font-semibold text-gray-200"></span></div>
+                                    <div class="flex justify-between items-center"><span class="text-gray-400 font-medium">User ID:</span><span id="profile-uid-display" class="text-xs font-mono text-gray-500"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="videos-page" class="hidden">
+                        <div class="flex flex-col lg:flex-row -m-4 sm:-m-6 h-full">
+                            <div class="w-full lg:w-3/4 flex flex-col">
+                                <div class="sticky top-0 z-10 p-4 sm:p-6" style="background-color: #021130;">
+                                    <div class="responsive-video-container bg-black rounded-lg shadow-lg overflow-hidden mb-4">
+                                        <iframe id="video-player" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    <div class="bg-slate-800 p-4 rounded-lg shadow">
+                                        <h1 id="video-title" class="text-xl font-bold text-gray-100 mb-1">Select a video</h1>
+                                        <p id="video-description" class="text-sm text-gray-300">Description will appear here.</p>
+                                    </div>
+                                </div>
+                                <div id="mobile-playlist-wrapper" class="p-4 sm:p-6 flex-grow overflow-y-auto lg:hidden"></div>
+                            </div>
+                            <aside id="desktop-playlist-wrapper" class="w-full lg:w-1/4 p-4 sm:p-6 lg:border-l lg:border-slate-700 hidden lg:block lg:overflow-y-auto"></aside>
+                        </div>
+                    </div>
+
+                   <div id="questions-2025-page" class="hidden fade-in-up">
+    
+    <div class="sticky-header">
+        <h2 id="questions-2025-title" class="font-bold text-gray-100 mb-4" style="font-size: 0.92rem;"></h2>
+        <div class="flex justify-between items-center gap-4">
+            <div class="relative flex-grow">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span>
+                <input type="text" id="questions-2025-search" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Search for a subject...">
+            </div>
+            <div id="questions-2025-count" class="text-gray-400 font-semibold flex-shrink-0"></div>
+        </div>
+    </div>
+    <div id="questions-2025-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6"></div>
+</div>
+
+                    <div id="wassce-trial-page" class="hidden fade-in-up">
+
+    <div class="sticky-header">
+        <h2 id="wassce-trial-title" class="font-bold text-gray-100 mb-4" style="font-size: 0.92rem;"></h2>
+        <div class="flex justify-between items-center gap-4">
+            <div class="relative flex-grow">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span>
+                <input type="text" id="wassce-trial-search" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Search for a subject...">
+            </div>
+            <div id="wassce-trial-count" class="text-gray-400 font-semibold flex-shrink-0"></div>
+        </div>
+    </div>
+    <div id="wassce-trial-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6"></div>
+</div>
+                    
+                    <div id="about-page" class="hidden fade-in-up bg-slate-800 p-6 rounded-lg shadow-md max-w-3xl mx-auto">
+                        <h2 class="text-2xl font-bold text-gray-100 mb-4">About Wassce Questions</h2>
+                        <div id="about-page-content" class="text-gray-300 space-y-4"></div>
+                    </div>
+                    
+                    <div id="notifications-page" class="hidden fade-in-up">
+                        <div class="max-w-3xl mx-auto">
+                            <h2 class="text-2xl font-bold text-gray-100 mb-6">Notifications</h2>
+                            <div id="notifications-container" class="space-y-4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <nav id="bottom-nav" class="bottom-nav fixed bottom-0 left-0 right-0 bg-slate-800 border-t border-slate-700 flex justify-around items-center py-2 z-50">
+                <a href="#home" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400">
+                    <i class="fas fa-home text-xl text-indigo-400"></i>
+                    <span class="text-xs mt-1">Home</span>
+                </a>
+                <a href="#chatroom" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400 relative">
+                    <i class="fas fa-comments text-xl text-teal-400"></i>
+                    <span class="text-xs mt-1">Chatroom</span>
+                </a>
+                <a href="#videos" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400">
+                    <i class="fas fa-video text-xl text-pink-400"></i>
+                    <span class="text-xs mt-1">Videos</span>
+                </a>
+                <a href="#questions-2025" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400">
+                    <i class="fas fa-book-open text-xl text-sky-400"></i>
+                    <span class="text-xs mt-1">2025 Qs</span>
+                </a>
+                <a href="#wassce-trial" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400">
+                    <i class="fas fa-file-alt text-xl text-amber-400"></i>
+                    <span class="text-xs mt-1">Trial Qs</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div id="subject-viewer-page" class="hidden subject-content-viewer">
+     <header class="viewer-header flex items-center">
+         <button id="subject-viewer-back-btn" class="text-gray-200 text-xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-700 transition-colors mr-2">
+             <i class="fas fa-arrow-left"></i>
+         </button>
+         <h2 id="subject-viewer-title" class="text-xl font-bold text-gray-100 truncate flex-1">Subject Content</h2>
+     </header>
+     <div class="content-body-wrapper content-body">
+         <div id="subject-viewer-content"></div>
+     </div>
+</div>
+
+<div id="chat-page" class="hidden fixed inset-0 bg-slate-900 z-[99] flex flex-col">
+    <header class="flex items-center p-4 bg-slate-800 border-b border-slate-700 flex-shrink-0">
+        <button id="chat-back-btn" class="text-gray-300 mr-4"><i class="fas fa-arrow-left text-xl"></i></button>
+        <div class="flex items-center">
+            <h2 class="text-lg font-bold text-gray-100 mr-2">Admin Support</h2>
+            <i class="fas fa-check-circle text-blue-400"></i>
+        </div>
+        <div id="admin-status" class="ml-auto flex items-center text-xs">
+            <span id="admin-status-dot" class="w-2 h-2 rounded-full bg-gray-500 mr-2"></span>
+            <span id="admin-status-text">Offline</span>
+        </div>
+    </header>
+    <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+    <div id="typing-indicator" class="px-4 pb-2 text-sm text-gray-400 hidden">Admin is typing...</div>
+    <form id="message-form" class="p-4 bg-slate-800 border-t border-slate-700 flex items-center space-x-2 flex-shrink-0">
+        <input type="text" id="message-input" class="w-full p-3 border border-slate-600 rounded-full bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Type your message..." autocomplete="off">
+        <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </form>
+</div>
+
+<div id="chatroom-page" class="hidden fixed inset-0 bg-slate-900 z-[99] flex flex-col">
+    <header class="relative flex items-center justify-center p-4 bg-slate-800 border-b border-slate-700 flex-shrink-0">
+        <button id="chatroom-back-btn" class="absolute left-4 text-gray-300"><i class="fas fa-arrow-left text-xl"></i></button>
+        <div class="flex items-center">
+            <h2 class="text-lg font-bold text-gray-100 mr-2">Public Chatroom</h2>
+            <i class="fas fa-users text-blue-400"></i>
+        </div>
+    </header>
+    <div id="chatroom-messages-container" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+    <form id="chatroom-message-form" class="p-4 bg-slate-800 border-t border-slate-700 flex items-center space-x-2 flex-shrink-0">
+        <input type="text" id="chatroom-message-input" class="w-full p-3 border border-slate-600 rounded-full bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Type your message..." autocomplete="off">
+        <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </form>
+</div>
+
+<div id="new-message-bubble" class="fixed bottom-20 right-4 z-[99] cursor-pointer hidden">
+    </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, onSnapshot, query, where, orderBy, updateDoc, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    
+    // Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCYqFoObiDHR7sUxdTIpJVtnLWXZOINX3I",
+  authDomain: "godisgreat-9d1b2.firebaseapp.com",
+  projectId: "godisgreat-9d1b2",
+  storageBucket: "godisgreat-9d1b2.firebasestorage.app",
+  messagingSenderId: "713822591014",
+  appId: "1:713822591014:web:e1bf134fa6f916a6a16ee7"
+};
+
+    // --- Initialize Firebase ---
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // --- Global State & Element Cache ---
+    let currentUserId = null;
+    let currentUserData = null;
+    let userStatusRef = null;
+    let videos = [];
+    let allSubjectsCache = [];
+    let tempUserIdForActivation = null; 
+    let returningUserId = null;
+    let lastPageHash = null; 
+    let chatListener = null;
+    let unreadListener = null;
+    let adminStatusListener = null;
+    let isAttemptingAnonymousSignIn = false;
+    let chatroomListener = null;
+    let unreadChatroomListener = null;
+    let notificationsListener = null;
+    
+    const getEl = (id) => document.getElementById(id);
+
+    // --- App Logic ---
+    function getDeviceId() {
+        let deviceId = localStorage.getItem('deviceId');
+        if (!deviceId) {
+            deviceId = crypto.randomUUID();
+            localStorage.setItem('deviceId', deviceId);
+        }
+        return deviceId;
+    }
+
+    function generateAvatar(name = 'User') {
+        const emojis = ['😊', '🧑‍💻', '🚀', '💡', '🎨', '📚', '🔬', '🎓', '🌟', '🎉'];
+        const colors = ['#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const emoji = emojis[Math.abs(hash) % emojis.length];
+        const color = colors[Math.abs(hash) % colors.length];
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="${color}" /><text x="50" y="50" font-size="60" font-family="Arial, sans-serif" text-anchor="middle" dominant-baseline="central">${emoji}</text></svg>`;
+        return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
+    }
+
+    function showCustomAlert(title, message, iconClass = 'fas fa-info-circle text-amber-400') {
+        getEl('custom-alert-title').textContent = title;
+        getEl('custom-alert-message').textContent = message;
+        getEl('custom-alert-icon').innerHTML = `<i class="${iconClass}"></i>`;
+        getEl('custom-alert-modal').classList.remove('hidden');
+    }
+
+    function closeSidebar() {
+        getEl('sidebar').classList.add('-translate-x-full');
+        getEl('sidebar-overlay').classList.add('hidden');
+    }
+
+    async function setUserOnlineStatus(isOnline) {
+        if (!currentUserId) return;
+        userStatusRef = doc(db, 'status', currentUserId);
+        try {
+            await setDoc(userStatusRef, { isOnline, lastSeen: serverTimestamp() });
+        } catch (e) {
+            console.error("Could not set user status: ", e);
+        }
+    }
+
+    async function transitionToMainApp(userId) {
+        currentUserId = userId;
+        localStorage.setItem('loggedInUserId', currentUserId);
+        
+        await loadUserData();
+        
+        if (currentUserData && currentUserData.username) {
+            localStorage.setItem('lastUsername', currentUserData.username);
+        }
+        
+        await fetchRemoteContent();
+        updateUserUIState();
+        setUserOnlineStatus(true);
+        listenForNotifications();
+        listenForUnreadChatroomMessages();
+        
+        getEl('login-screen').classList.remove('flex');
+        getEl('login-screen').classList.add('hidden');
+        getEl('access-code-screen').classList.remove('flex');
+        getEl('access-code-screen').classList.add('hidden');
+        getEl('main-app').classList.remove('hidden');
+        getEl('main-app').classList.add('flex');
+        
+        const hash = window.location.hash.substring(1) || 'home';
+        showPage(hash);
+    }
+
+    async function handleLogin() {
+        const username = getEl('username-input').value.trim();
+        const pin = getEl('pin-input').value.trim();
+
+        if (!username || !pin) {
+            showCustomAlert('Input Error', 'Please enter both username and PIN.', 'fas fa-exclamation-triangle text-yellow-400');
+            return;
+        }
+
+        const loginBtn = getEl('login-btn');
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Verifying...';
+
+        try {
+            const credentialsRef = collection(db, 'credentials');
+            const q = query(credentialsRef, where("username", "==", username));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) { throw new Error("Invalid username or PIN."); }
+
+            const credentialData = querySnapshot.docs[0].data();
+            const hashedPin = CryptoJS.SHA256(pin).toString();
+
+            if (hashedPin !== credentialData.hashedPin) { throw new Error("Invalid username or PIN."); }
+            
+            const userUid = credentialData.user_uid;
+            const userDocRef = doc(db, 'users', userUid);
+            const userDoc = await getDoc(userDocRef);
+            if (!userDoc.exists()) { throw new Error("User account not found. Contact admin."); }
+
+            const userData = userDoc.data();
+            const deviceId = getDeviceId();
+            
+            if (userData.isDeviceRegistered) {
+                if(userData.deviceId && userData.deviceId === deviceId) {
+                    await transitionToMainApp(userUid);
+                } else {
+                    throw new Error("This account is locked to another device. Please contact support.");
+                }
+            } else {
+                tempUserIdForActivation = userUid;
+                getEl('login-screen').classList.remove('flex');
+                getEl('login-screen').classList.add('hidden');
+                getEl('access-code-screen').classList.add('flex');
+                getEl('access-code-screen').classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error("Login failed:", error);
+            showCustomAlert('Login Failed', error.message, 'fas fa-times-circle text-red-400');
+        } finally {
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
+        }
+    }
+    
+    async function handlePinOnlyLogin() {
+        const pin = getEl('pin-only-input').value.trim();
+        if(!pin) {
+            showCustomAlert('Input Error', 'Please enter your PIN.', 'fas fa-exclamation-triangle text-yellow-400');
+            return;
+        }
+        
+        const pinLoginBtn = getEl('pin-login-btn');
+        pinLoginBtn.disabled = true;
+        pinLoginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Unlocking...';
+
+        try {
+            const userDocRef = doc(db, 'users', returningUserId);
+            const userDoc = await getDoc(userDocRef);
+            if (!userDoc.exists()) { throw new Error("User account not found."); }
+            
+            const userData = userDoc.data();
+            const deviceId = getDeviceId();
+
+            if (userData.isDeviceRegistered && userData.deviceId && userData.deviceId !== deviceId) {
+               throw new Error("This account is locked to another device. Please log in with the correct account.");
+            }
+
+            const credentialsRef = collection(db, 'credentials');
+            const q = query(credentialsRef, where("username", "==", userData.username));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) { throw new Error("Could not verify credentials."); }
+
+            const credentialData = querySnapshot.docs[0].data();
+            const hashedPin = CryptoJS.SHA256(pin).toString();
+
+            if (hashedPin !== credentialData.hashedPin) { throw new Error("Invalid PIN."); }
+
+            await transitionToMainApp(returningUserId);
+
+        } catch (error) {
+             console.error("PIN Login failed:", error);
+             showCustomAlert('Login Failed', error.message, 'fas fa-times-circle text-red-400');
+        } finally {
+            pinLoginBtn.disabled = false;
+            pinLoginBtn.textContent = 'Unlock';
+        }
+    }
+
+    async function handleActivation() {
+        const accessCode = getEl('access-code-input').value.trim();
+        if (!accessCode) {
+            return showCustomAlert('Input Error', 'Please enter your access code.', 'fas fa-exclamation-triangle text-yellow-400');
+        }
+        if (!tempUserIdForActivation) {
+            return showCustomAlert('Error', 'User session expired. Please log in again.', 'fas fa-times-circle text-red-400');
+        }
+
+        const activateBtn = getEl('activate-btn');
+        activateBtn.disabled = true;
+        activateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Submitting...';
+
+        try {
+            const deviceId = getDeviceId();
+            const requestsRef = collection(db, "activationRequests");
+            await addDoc(requestsRef, {
+                userIdToActivate: tempUserIdForActivation,
+                accessCodeEntered: accessCode,
+                deviceId: deviceId,
+                requestTimestamp: serverTimestamp()
+            });
+
+            getEl('access-code-content').innerHTML = `
+                <i class="fas fa-paper-plane text-5xl text-green-400 mb-4"></i>
+                <h1 class="text-3xl font-bold text-gray-100 mb-2">Request Sent!</h1>
+                <p class="text-gray-400 mb-8">Your activation request has been sent to the admin. Please wait for approval. You can close this window now.</p>
+            `;
+
+        } catch (error) {
+            console.error("Failed to send activation request:", error);
+            showCustomAlert('Request Failed', 'Could not send your request. Please try again.', 'fas fa-times-circle text-red-400');
+            activateBtn.disabled = false;
+            activateBtn.innerHTML = 'Activate Device';
+        }
+    }
+
+    async function handleLogout() {
+        await setUserOnlineStatus(false);
+        localStorage.removeItem('loggedInUserId');
+        currentUserId = null;
+        currentUserData = null;
+        window.location.hash = '';
+        window.location.reload(); 
+    }
+
+    async function loadUserData() {
+        if (!currentUserId) return;
+        try {
+            const userDocRef = doc(db, 'users', currentUserId);
+            const userDoc = await getDoc(userDocRef);
+            if (userDoc.exists()) {
+                currentUserData = userDoc.data();
+                updateUIForUser();
+            } else {
+                console.error("User document not found!");
+                handleLogout();
+            }
+        } catch (error) {
+            console.error("Error loading user data:", error);
+        }
+    }
+
+    function updateUIForUser() {
+        if (!currentUserData) return;
+        const avatarUrl = generateAvatar(currentUserData.name);
+        
+        getEl('header-title').textContent = `Hello, ${currentUserData.name || 'User'}!`;
+        getEl('header-profile-pic').src = avatarUrl;
+        
+        getEl('profile-pic-display').src = avatarUrl;
+        getEl('profile-name-display').textContent = currentUserData.name || 'N/A';
+        getEl('profile-username-display').textContent = currentUserData.username || 'N/A';
+        getEl('profile-uid-display').textContent = currentUserId;
+
+        // Update user status display on profile page
+        const statusEl = getEl('profile-status-display');
+        if (currentUserData.userType === 'premium') {
+            statusEl.textContent = 'Premium User';
+            statusEl.className = 'text-sm font-bold mt-1 px-3 py-1 rounded-full bg-amber-500/20 text-amber-400';
+        } else {
+            statusEl.textContent = 'Basic User';
+            statusEl.className = 'text-sm font-bold mt-1 px-3 py-1 rounded-full bg-gray-500/20 text-gray-400';
+        }
+    }
+    
+    function updateUserUIState() {
+        if (currentUserData && currentUserData.isDeviceRegistered) {
+            getEl('logout-btn').classList.add('hidden');
+        } else {
+            getEl('logout-btn').classList.remove('hidden');
+        }
+    }
+
+    function showPage(pageId) {
+        if (pageId === lastPageHash) return;
+        lastPageHash = pageId; 
+        
+        Array.from(getEl('main-pages-container').children).forEach(p => p.classList.add('hidden'));
+        const pageToShow = getEl(`${pageId}-page`);
+
+        if (pageToShow) {
+            pageToShow.classList.remove('hidden');
+        } else {
+            getEl('home-page').classList.remove('hidden');
+            pageId = 'home';
+        }
+
+        const pageTitles = {
+            home: `Hello, ${currentUserData?.name || 'User'}!`,
+            profile: 'My Profile',
+            videos: 'Video Lessons',
+            'questions-2025': getEl('questions-2025-title').textContent || '2025 Questions',
+            'wassce-trial': getEl('wassce-trial-title').textContent || 'WASSCE Trial Questions',
+            about: 'About WASS Pupils',
+            chatroom: 'Public Chatroom',
+            notifications: 'Notifications'
+        };
+        getEl('header-title').textContent = pageTitles[pageId] || 'WASS Pupils';
+
+        document.querySelectorAll('.bottom-nav .nav-link, .sidebar .nav-link').forEach(link => {
+            const linkPage = link.getAttribute('href').substring(1);
+            const linkContainer = link.closest('.bottom-nav-item') || link.closest('.sidebar-link');
+            if (linkContainer) {
+                linkContainer.classList.toggle('active', linkPage === pageId);
+            }
+        });
+
+        switch (pageId) {
+            case 'home': loadHomePage(); break;
+            case 'videos': loadVideos(true); break;
+            case 'questions-2025': loadSubjects('questions_2025', 'questions-2025-container', true); break;
+            case 'wassce-trial': loadSubjects('wassce_trial_questions', 'wassce-trial-container', true); break;
+            case 'chatroom': showChatroomPage(); break;
+            case 'notifications': showNotificationsPage(); break;
+        }
+    }
+    
+    async function showSubjectViewer(subjectId, collectionName) {
+        getEl('main-app').classList.add('hidden');
+        getEl('subject-viewer-page').classList.remove('hidden');
+        const contentEl = getEl('subject-viewer-content');
+        contentEl.innerHTML = `<div class="text-center text-gray-400 col-span-full"><i class="fas fa-spinner fa-spin mr-2"></i>Loading Content...</div>`;
+        
+        try {
+            const subjectDocRef = doc(db, collectionName, subjectId);
+            const subjectDoc = await getDoc(subjectDocRef);
+
+            if(subjectDoc.exists()) {
+                const subjectData = subjectDoc.data();
+                getEl('subject-viewer-title').textContent = subjectData.name;
+                contentEl.innerHTML = subjectData.contentHTML || '<p class="text-gray-400">No content available for this subject yet.</p>';
+                if (window.MathJax) {
+                    MathJax.typesetPromise([contentEl]);
+                }
+            } else {
+                 contentEl.innerHTML = '<p class="text-red-400">Could not find the requested content.</p>';
+            }
+        } catch(error) {
+            console.error("Error loading subject content:", error);
+            contentEl.innerHTML = '<p class="text-red-400">Failed to load content. Please try again.</p>';
+        }
+    }
+
+    function hideSubjectViewer() {
+        getEl('subject-viewer-page').classList.add('hidden');
+        getEl('main-app').classList.remove('hidden');
+    }
+    
+    // REPLACE your old loadSubjects function with this new one
+async function loadSubjects(collectionName, containerId, forceRefresh = false) {
+    const container = getEl(containerId);
+    if (!forceRefresh && container.children.length > 0 && !container.innerHTML.includes('fa-spinner')) return;
+
+    container.innerHTML = `<div class="text-center text-gray-400 col-span-full"><i class="fas fa-spinner fa-spin mr-2"></i>Loading Subjects...</div>`;
+
+    try {
+        const allSubjects = await fetchAllSubjects(forceRefresh);
+        const filteredSubjects = allSubjects.filter(s => s.category === collectionName);
+
+        const unlockedSubjectsRef = collection(db, 'users', currentUserId, 'unlocked_subjects');
+        const unlockedSnapshot = await getDocs(unlockedSubjectsRef);
+        const unlockedSubjectIds = new Set(unlockedSnapshot.docs.map(doc => doc.id));
+
+        const pagePrefix = containerId.replace('-container', '');
+        const countEl = getEl(`${pagePrefix}-count`);
+        const searchInput = getEl(`${pagePrefix}-search`);
+
+        const drawSubjects = (searchTerm = '') => {
+            container.innerHTML = '';
+            const searchLower = searchTerm.toLowerCase();
+
+            const subjectsToDisplay = filteredSubjects.filter(subject => 
+                subject.name.toLowerCase().includes(searchLower)
+            );
+            
+            if (countEl) {
+                countEl.textContent = `Total: ${subjectsToDisplay.length}`;
+            }
+
+            if (subjectsToDisplay.length === 0) {
+                container.innerHTML = `<p class="text-gray-400 text-center col-span-full">No subjects found.</p>`;
+                return;
+            }
+
+            subjectsToDisplay.sort((a,b) => a.name.localeCompare(b.name)).forEach(subject => {
+                const isUnlocked = unlockedSubjectIds.has(subject.id);
+                const card = document.createElement('div');
+                card.className = `subject-card bg-slate-800 rounded-lg p-4 flex items-center cursor-pointer`;
+                
+                const iconClass = subject.icon || 'fa-book';
+                const iconColor = subject.color || 'text-amber-400';
+
+                card.innerHTML = `
+                    <div class="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                        <i class="fas ${iconClass} text-2xl ${iconColor}"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <h5 class="font-bold text-sm text-gray-200">${subject.name}</h5>
+                        ${subject.tag ? `<span class="mt-1 inline-block bg-yellow-500 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">${subject.tag}</span>` : ''}
+                    </div>
+                    <div class="flex items-center justify-center p-2 rounded-full text-xs ml-4 ${isUnlocked ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}">
+                        <i class="fas ${isUnlocked ? 'fa-lock-open' : 'fa-lock'} text-xs mr-2"></i>
+                        <span>${isUnlocked ? 'Unlocked' : 'Locked'}</span>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => {
+                    if (isUnlocked) {
+                        showSubjectViewer(subject.id, collectionName);
+                    } else {
+                        showCustomAlert('Access Denied', `Please contact the administrator to unlock ${subject.name}.`, 'fas fa-exclamation-circle text-red-400');
+                    }
+                });
+
+                container.appendChild(card);
+            });
+        };
+
+        // Initial draw of all subjects
+        drawSubjects();
+
+        // Add event listener for the search input
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                drawSubjects(e.target.value);
+            });
+        }
+
+    } catch (error) {
+        console.error(`Error loading subjects from ${collectionName}:`, error);
+        container.innerHTML = `<p class="text-red-400 text-center col-span-full">Could not load subjects. Please try again later.</p>`;
+    }
+}
+
+    async function loadVideos(forceRefresh = false) {
+        if (!forceRefresh && videos.length > 0) return;
+
+        try {
+            const querySnapshot = await getDocs(query(collection(db, "videos"), orderBy("order")));
+            videos = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            buildPlaylistUI(getEl('desktop-playlist-wrapper'));
+            buildPlaylistUI(getEl('mobile-playlist-wrapper'));
+
+            if (videos.length > 0) {
+                 playVideo(0);
+            } else {
+                 getEl('video-title').textContent = 'No videos available.';
+                 getEl('video-description').textContent = 'Please check back later.';
+            }
+        } catch (error) {
+            console.error("Error fetching videos: ", error);
+        }
+    }
+    
+    function buildPlaylistUI(container) {
+        if (!container) return;
+        container.innerHTML = `<h3 class="text-xl font-bold mb-4 text-gray-100">Playlist (${videos.length})</h3><div class="video-playlist space-y-2"></div>`;
+        const playlistEl = container.querySelector('.video-playlist');
+        playlistEl.innerHTML = ''; 
+        videos.forEach((video, index) => {
+            const videoItem = document.createElement('a');
+            videoItem.href = "#";
+            videoItem.className = 'playlist-item block p-3 rounded-lg hover:bg-slate-700 transition border-l-4 border-transparent';
+            videoItem.dataset.id = video.id;
+            videoItem.innerHTML = `<p class="font-semibold text-sm text-gray-300">${video.title}</p>`;
+            videoItem.addEventListener('click', (e) => { e.preventDefault(); playVideo(index); });
+            playlistEl.appendChild(videoItem);
+        });
+    }
+
+    function playVideo(index) {
+        const video = videos[index];
+        const player = getEl('video-player');
+        
+        let embedUrl = video.youtubeUrl.replace("watch?v=", "embed/");
+        player.src = embedUrl;
+
+        getEl('video-title').textContent = video.title;
+        getEl('video-description').textContent = video.description;
+        document.querySelectorAll('.playlist-item').forEach(item => item.classList.remove('active'));
+        document.querySelectorAll(`[data-id="${video.id}"]`).forEach(item => item.classList.add('active'));
+    }
+    
+    async function fetchRemoteContent() {
+        try {
+            const contentDoc = await getDoc(doc(db, "app_settings", "dynamic_content"));
+            if (contentDoc.exists()) {
+                const data = contentDoc.data();
+                if(getEl('login-header-text')) getEl('login-header-text').textContent = data.login_header_text || 'WASS Pupils';
+                if(getEl('login-subheader-text')) getEl('login-subheader-text').textContent = data.login_subheader_text || 'Please enter your credentials to continue.';
+                if(getEl('questions-2025-title')) getEl('questions-2025-title').textContent = data.questions_2025_title || '2025 Questions';
+                if(getEl('wassce-trial-title')) getEl('wassce-trial-title').textContent = data.wassce_trial_title || 'WASSCE Trial Questions';
+                if(getEl('about-page-content')) getEl('about-page-content').innerHTML = data.about_page_content || '<p>About content coming soon.</p>';
+            }
+        } catch (error) {
+            console.error("Could not fetch remote content:", error);
+        }
+    }
+    
+    function loadHomePage() {
+        if (!currentUserData) return;
+        getEl('home-profile-pic').src = generateAvatar(currentUserData.name);
+        getEl('home-welcome-name').textContent = currentUserData.name;
+        
+        const statusEl = getEl('home-user-status');
+        if (currentUserData.userType === 'premium') {
+            statusEl.textContent = 'Premium';
+            statusEl.className = 'text-xs font-semibold mt-1 inline-block px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400';
+        } else {
+            statusEl.textContent = 'Basic';
+            statusEl.className = 'text-xs font-semibold mt-1 inline-block px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-400';
+        }
+
+        loadUnlockedSubjects();
+        listenForUnreadMessages();
+    }
+
+    async function fetchAllSubjects(forceRefresh = false) {
+        if (forceRefresh) {
+            allSubjectsCache = [];
+        }
+        if (allSubjectsCache.length > 0) return allSubjectsCache;
+        
+        try {
+            const cats = ['questions_2025', 'wassce_trial_questions'];
+            const subjectPromises = cats.map(category => getDocs(query(collection(db, category))));
+            const subjectSnapshots = await Promise.all(subjectPromises);
+            
+            allSubjectsCache = [];
+            subjectSnapshots.forEach((snapshot, index) => {
+                snapshot.forEach(doc => {
+                    allSubjectsCache.push({ id: doc.id, category: cats[index], ...doc.data() });
+                });
+            });
+            return allSubjectsCache;
+        } catch (error) {
+            console.error("Failed to pre-cache subjects:", error);
+            return [];
+        }
+    }
+
+    async function loadUnlockedSubjects() {
+        const container = getEl('unlocked-subjects-container');
+        container.innerHTML = `<div class="text-center text-gray-400 col-span-full"><i class="fas fa-spinner fa-spin mr-2"></i>Loading your subjects...</div>`;
+
+        try {
+            const allSubjects = await fetchAllSubjects();
+            const unlockedSubjectsRef = collection(db, 'users', currentUserId, 'unlocked_subjects');
+            const unlockedSnapshot = await getDocs(unlockedSubjectsRef);
+            const unlockedSubjectIds = new Set(unlockedSnapshot.docs.map(doc => doc.id));
+
+            const unlockedSubjects = allSubjects.filter(subject => unlockedSubjectIds.has(subject.id));
+            const subjectsToShow = unlockedSubjects.slice(0, 3);
+
+            container.innerHTML = '';
+            if (subjectsToShow.length === 0) {
+                 container.innerHTML = `<p class="text-gray-400 text-center p-4">No subjects unlocked yet. Contact admin.</p>`;
+                 return;
+            }
+
+            subjectsToShow.forEach(subject => {
+                const card = document.createElement('div');
+                card.className = `subject-card bg-slate-800 rounded-lg p-4 flex items-center cursor-pointer w-full flex-shrink-0`;
+                const iconClass = subject.icon || 'fa-book';
+                const iconColor = subject.color || 'text-amber-400';
+
+                card.innerHTML = `
+                    <div class="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                        <i class="fas ${iconClass} text-2xl ${iconColor}"></i>
+                    </div>
+                     <div class="flex-grow">
+                         <h5 class="font-bold text-sm text-gray-200 whitespace-normal">${subject.name}</h5>
+                         ${subject.tag ? `<span class="mt-1 inline-block bg-yellow-500 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">${subject.tag}</span>` : ''}
+                    </div>
+                `;
+                card.addEventListener('click', () => showSubjectViewer(subject.id, subject.category));
+                container.appendChild(card);
+            });
+        } catch (error) {
+            console.error("Error loading unlocked subjects:", error);
+            container.innerHTML = `<p class="text-red-400 text-center p-4">Could not load your subjects.</p>`;
+        }
+    }
+
+    function showChatPage() {
+        getEl('main-app').classList.add('hidden');
+        getEl('chat-page').classList.remove('hidden');
+
+        const messagesRef = collection(db, 'chats', currentUserId, 'messages');
+        const q = query(messagesRef, orderBy('timestamp'));
+
+        chatListener = onSnapshot(q, (snapshot) => {
+            getEl('messages-container').innerHTML = '';
+            snapshot.forEach(doc => {
+                renderSupportMessage(doc.data(), doc.id);
+            });
+            getEl('messages-container').scrollTop = getEl('messages-container').scrollHeight;
+        });
+
+        const adminStatusRef = doc(db, 'status', 'admin');
+        adminStatusListener = onSnapshot(adminStatusRef, (doc) => {
+            if (doc.exists() && doc.data().isOnline) {
+                getEl('admin-status-dot').classList.remove('bg-gray-500');
+                getEl('admin-status-dot').classList.add('bg-green-500');
+                getEl('admin-status-text').textContent = 'Online';
+            } else {
+                getEl('admin-status-dot').classList.add('bg-gray-500');
+                getEl('admin-status-dot').classList.remove('bg-green-500');
+                getEl('admin-status-text').textContent = 'Offline';
+            }
+        });
+    }
+
+    function hideChatPage() {
+        if (chatListener) chatListener();
+        if (adminStatusListener) adminStatusListener();
+        getEl('chat-page').classList.add('hidden');
+        getEl('main-app').classList.remove('hidden');
+    }
+
+   function renderSupportMessage(data, id) {
+        const msgDiv = document.createElement('div');
+        const isUser = data.senderId === currentUserId;
+
+        let statusIcon = '';
+        if (isUser) {
+            if (data.status === 'read') {
+                statusIcon = '<i class="fas fa-check-double text-blue-400"></i>';
+            } else if (data.status === 'delivered') {
+                statusIcon = '<i class="fas fa-check-double text-gray-400"></i>';
+            } else {
+                statusIcon = '<i class="fas fa-check text-gray-400"></i>';
+            }
+        }
+
+        msgDiv.className = `w-full flex ${isUser ? 'justify-end' : 'justify-start'}`;
+        msgDiv.innerHTML = `
+            <div class="max-w-xs md:max-w-md">
+                <div class="px-4 py-2 rounded-2xl ${isUser ? 'chat-bubble-user rounded-br-none' : 'chat-bubble-other rounded-bl-none'}">
+                    <p class="text-sm break-words">${data.text}</p>
+                </div>
+                <div class="text-xs text-gray-500 mt-1 px-2 flex items-center space-x-1 ${isUser ? 'justify-end' : 'justify-start'}">
+                    <span>${data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}</span>
+                    ${isUser ? `<span class="message-status-icon">${statusIcon}</span>` : ''}
+                </div>
+            </div>
+        `;
+        getEl('messages-container').appendChild(msgDiv);
+
+        if (!isUser && data.status !== 'read') {
+            const msgRef = doc(db, 'chats', currentUserId, 'messages', id);
+             updateDoc(msgRef, { status: 'read' });
+        }
+    }
+
+    async function handleSendMessage(e) {
+        e.preventDefault();
+        const messageInput = getEl('message-input');
+        const text = messageInput.value.trim();
+        if (text === '') return;
+        
+        const originalText = text;
+        messageInput.value = '';
+        const messagesRef = collection(db, 'chats', currentUserId, 'messages');
+        try {
+            await addDoc(messagesRef, {
+                text: originalText,
+                senderId: currentUserId,
+                timestamp: serverTimestamp(),
+                status: 'sent' 
+            });
+        } catch (error) {
+            console.error("Error sending message:", error);
+            showCustomAlert('Error', 'Could not send message.', 'fas fa-times-circle text-red-400');
+            messageInput.value = originalText;
+        }
+    }
+
+    function listenForUnreadMessages() {
+        if (unreadListener) unreadListener(); 
+
+        const messagesRef = collection(db, 'chats', currentUserId, 'messages');
+        const q = query(messagesRef, where('senderId', '==', 'admin'), where('status', '!=', 'read'));
+        
+        unreadListener = onSnapshot(q, (snapshot) => {
+            const count = snapshot.size;
+            const unreadCountBadge = getEl('unread-count-badge');
+            if (count > 0) {
+                unreadCountBadge.textContent = count;
+                unreadCountBadge.classList.remove('hidden');
+            } else {
+                unreadCountBadge.classList.add('hidden');
+            }
+        });
+    }
+
+    // --- UPDATED AND NEW FUNCTIONS ---
+
+    function showChatroomPage() {
+        getEl('main-app').classList.add('hidden');
+        getEl('chatroom-page').classList.remove('hidden');
+
+        // Hide the notification bubble when entering the chatroom
+        const bubble = getEl('new-message-bubble');
+        if (bubble) {
+            bubble.classList.remove('visible');
+        }
+
+        const chatroomInput = getEl('chatroom-message-input');
+        const chatroomFormButton = getEl('chatroom-message-form').querySelector('button');
+
+        if (currentUserData.userType !== 'premium') {
+            chatroomInput.disabled = true;
+            chatroomInput.placeholder = 'Chat is for Premium Users only.';
+            chatroomFormButton.disabled = true;
+            chatroomInput.addEventListener('click', () => {
+                showCustomAlert('Premium Feature', 'Only Premium Users can send messages.', 'fas fa-gem text-amber-400');
+            });
+        } else {
+            chatroomInput.disabled = false;
+            chatroomInput.placeholder = 'Type your message...';
+            chatroomFormButton.disabled = false;
+        }
+
+        const messagesRef = collection(db, 'chatroom');
+        const q = query(messagesRef, orderBy('timestamp', 'desc'), limit(50));
+
+        chatroomListener = onSnapshot(q, (snapshot) => {
+            const container = getEl('chatroom-messages-container');
+            container.innerHTML = '';
+            const messages = snapshot.docs.reverse(); 
+            messages.forEach(doc => {
+                renderChatroomMessage(doc.data());
+            });
+            container.scrollTop = container.scrollHeight;
+        });
+        
+        // Mark as read
+        const userDocRef = doc(db, 'users', currentUserId);
+        updateDoc(userDocRef, { lastChatroomReadTimestamp: serverTimestamp() });
+    }
+
+    function hideChatroomPage() {
+        if (chatroomListener) chatroomListener();
+        getEl('chatroom-page').classList.add('hidden');
+        getEl('main-app').classList.remove('hidden');
+    }
+
+    function renderChatroomMessage(data) {
+        const msgDiv = document.createElement('div');
+        const isUser = data.senderId === currentUserId;
+        const isPremium = currentUserData.userType === 'premium';
+
+        let textBlurClass = '';
+        let premiumLockOverlay = '';
+
+        if (!isPremium && !isUser) {
+            textBlurClass = 'filter blur-sm text-transparent select-none';
+            premiumLockOverlay = `
+                <div class="absolute inset-0 flex items-center justify-center">
+                     <span class="text-xs text-amber-300 font-semibold bg-black/50 px-2 py-1 rounded-md">
+                         <i class="fas fa-gem mr-1"></i> Premium
+                     </span>
+                </div>`;
+        }
+
+        msgDiv.className = `w-full flex ${isUser ? 'justify-end' : 'justify-start'}`;
+        msgDiv.innerHTML = `
+            <div class="max-w-xs md:max-w-md">
+                ${!isUser ? `<p class="text-xs text-amber-300 ml-3 mb-1 font-semibold">${data.senderName || 'User'}</p>` : ''}
+                <div class="relative px-4 py-2 rounded-2xl ${isUser ? 'chat-bubble-user rounded-br-none' : 'chat-bubble-other rounded-bl-none'}">
+                    <p class="text-sm break-words ${textBlurClass}">${data.text}</p>
+                    ${premiumLockOverlay}
+                </div>
+                <div class="text-xs text-gray-500 mt-1 px-2 flex items-center space-x-1 ${isUser ? 'justify-end' : 'justify-start'}">
+                    <span>${data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}</span>
+                </div>
+            </div>
+        `;
+        getEl('chatroom-messages-container').appendChild(msgDiv);
+    }
+    
+    async function handleSendChatroomMessage(e) {
+        e.preventDefault();
+        if (currentUserData.userType !== 'premium') {
+            showCustomAlert('Premium Feature', 'Only Premium Users can send messages.', 'fas fa-gem text-amber-400');
+            return;
+        }
+        
+        const messageInput = getEl('chatroom-message-input');
+        const text = messageInput.value.trim();
+        if (text === '') return;
+        
+        const originalText = text;
+        messageInput.value = '';
+        
+        try {
+            await addDoc(collection(db, 'chatroom'), {
+                text: originalText,
+                senderId: currentUserId,
+                senderName: currentUserData.name,
+                timestamp: serverTimestamp(),
+            });
+        } catch (error) {
+            console.error("Error sending chatroom message:", error);
+            showCustomAlert('Error', 'Could not send message.', 'fas fa-times-circle text-red-400');
+            messageInput.value = originalText;
+        }
+    }
+
+    async function listenForUnreadChatroomMessages() {
+        if (unreadChatroomListener) unreadChatroomListener();
+
+        const userDoc = await getDoc(doc(db, 'users', currentUserId));
+        const lastRead = userDoc.data()?.lastChatroomReadTimestamp || null;
+
+        const q = query(collection(db, 'chatroom'), where('timestamp', '>', lastRead || new Date(0)));
+        unreadChatroomListener = onSnapshot(q, (snapshot) => {
+            const count = snapshot.docs.filter(d => d.data().senderId !== currentUserId).length;
+            const bubble = getEl('new-message-bubble');
+
+            if (count > 0 && window.location.hash !== '#chatroom') {
+                bubble.textContent = `New Message${count > 1 ? 's' : ''} (${count})`;
+                bubble.classList.remove('hidden');
+                setTimeout(() => bubble.classList.add('visible'), 10);
+            } else {
+                bubble.classList.remove('visible');
+            }
+        });
+    }
+
+    async function listenForNotifications() {
+        if (notificationsListener) notificationsListener();
+
+        const userDoc = await getDoc(doc(db, 'users', currentUserId));
+        const lastRead = userDoc.data()?.lastNotificationReadTimestamp || null;
+
+        const q = query(collection(db, 'notifications'), where('timestamp', '>', lastRead || new Date(0)));
+        notificationsListener = onSnapshot(q, (snapshot) => {
+            const count = snapshot.size;
+            const badge = getEl('notification-badge');
+            if (count > 0) {
+                badge.textContent = count > 9 ? '9+' : count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        });
+    }
+
+    async function showNotificationsPage() {
+        const container = getEl('notifications-container');
+        container.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin mr-2"></i>Loading notifications...</div>';
+
+        try {
+            const q = query(collection(db, 'notifications'), orderBy('timestamp', 'desc'), limit(20));
+            const snapshot = await getDocs(q);
+
+            container.innerHTML = '';
+            if (snapshot.empty) {
+                container.innerHTML = '<p class="text-center text-gray-400">You have no notifications yet.</p>';
+            } else {
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'bg-slate-800 p-4 rounded-lg border border-slate-700';
+                    const date = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString() : 'Just now';
+                    card.innerHTML = `
+                        <h3 class="font-bold text-amber-400">${data.title}</h3>
+                        <p class="text-gray-300 mt-2">${data.body}</p>
+                        <p class="text-xs text-gray-500 text-right mt-3">${date}</p>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            // Mark all as read by updating the user's timestamp
+            await updateDoc(doc(db, 'users', currentUserId), {
+                lastNotificationReadTimestamp: serverTimestamp()
+            });
+
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
+            container.innerHTML = '<p class="text-center text-red-400">Could not load notifications.</p>';
+        }
+    }
+
+    async function showPinOnlyLogin(username) {
+        try {
+            const q = query(collection(db, "users"), where("username", "==", username));
+            const userSnapshot = await getDocs(q);
+
+            if (!userSnapshot.empty) {
+                const userDoc = userSnapshot.docs[0];
+                const userData = userDoc.data();
+                const deviceId = getDeviceId();
+                
+                if(userData.isDeviceRegistered && userData.deviceId && userData.deviceId !== deviceId) {
+                    showCustomAlert('Account Mismatch', `This account is registered to another device.`, 'fas fa-shield-alt text-red-400');
+                    localStorage.removeItem('lastUsername');
+                    getEl('full-login-view').classList.remove('hidden');
+                    getEl('pin-only-login-view').classList.add('hidden');
+                } else {
+                    returningUserId = userDoc.id;
+                    getEl('pin-login-welcome-text').textContent = `Welcome, ${userData.name}!`;
+                    getEl('pin-login-avatar').src = generateAvatar(userData.name);
+                    getEl('full-login-view').classList.add('hidden');
+                    getEl('pin-only-login-view').classList.remove('hidden');
+                }
+            } else {
+                localStorage.removeItem('lastUsername');
+                getEl('full-login-view').classList.remove('hidden');
+                getEl('pin-only-login-view').classList.add('hidden');
+            }
+        } catch (err) {
+            console.error("Error finding returning user:", err);
+            localStorage.removeItem('lastUsername');
+            getEl('full-login-view').classList.remove('hidden');
+            getEl('pin-only-login-view').classList.add('hidden');
+        }
+        getEl('login-screen').classList.add('flex');
+        getEl('login-screen').classList.remove('hidden');
+    }
+
+    function initializeAppEventListeners() {
+        getDeviceId(); // Ensure device ID exists on first load
+        getEl('login-btn').addEventListener('click', handleLogin);
+        getEl('pin-login-btn').addEventListener('click', handlePinOnlyLogin);
+        getEl('activate-btn').addEventListener('click', handleActivation);
+        getEl('logout-btn').addEventListener('click', handleLogout);
+        getEl('subject-viewer-back-btn').addEventListener('click', hideSubjectViewer);
+        getEl('subject-viewer-page').addEventListener('contextmenu', (e) => e.preventDefault());
+        getEl('chat-with-admin-card').addEventListener('click', showChatPage);
+        getEl('chat-back-btn').addEventListener('click', hideChatPage);
+        getEl('message-form').addEventListener('submit', handleSendMessage);
+        
+        getEl('notification-btn').addEventListener('click', () => window.location.hash = 'notifications');
+        getEl('chatroom-message-form').addEventListener('submit', handleSendChatroomMessage);
+        
+        // --- ADDED ---
+        getEl('new-message-bubble').addEventListener('click', () => window.location.hash = 'chatroom');
+
+        getEl('chatroom-back-btn').addEventListener('click', () => {
+            hideChatroomPage();
+            window.location.hash = 'home';
+        });
+
+        getEl('switch-account-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('lastUsername');
+            returningUserId = null;
+            getEl('pin-only-input').value = '';
+            getEl('username-input').value = '';
+            getEl('pin-only-login-view').classList.add('hidden');
+            getEl('full-login-view').classList.remove('hidden');
+        });
+
+        getEl('no-account-link').addEventListener('click', (e) => {
+             e.preventDefault();
+             const phoneNumber = '23274183962';
+             const message = "Hey I just downloaded the WASSCE app. How do I get an account to start getting questions?";
+             const encodedMessage = encodeURIComponent(message);
+             const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+             window.open(whatsappURL, '_blank');
+        });
+        getEl('menu-btn').addEventListener('click', () => {
+            getEl('sidebar').classList.remove('-translate-x-full');
+            getEl('sidebar-overlay').classList.remove('hidden');
+        });
+        getEl('sidebar-overlay').addEventListener('click', closeSidebar);
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.hash = e.currentTarget.getAttribute('href').substring(1);
+            });
+        });
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.substring(1) || 'home';
+            showPage(hash);
+            closeSidebar();
+        });
+        window.addEventListener('beforeunload', () => {
+            if (currentUserId) {
+                setUserOnlineStatus(false);
+            }
+        });
+        getEl('header-profile-pic').addEventListener('click', () => window.location.hash = 'profile');
+        getEl('custom-alert-close-btn').addEventListener('click', () => getEl('custom-alert-modal').classList.add('hidden'));
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeAppEventListeners();
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in (either real or anonymous).
+                await fetchRemoteContent();
+                const savedUserId = localStorage.getItem('loggedInUserId');
+                const lastUsername = localStorage.getItem('lastUsername');
+                
+                if (savedUserId) { 
+                    await transitionToMainApp(savedUserId);
+                } else if (lastUsername) {
+                    await showPinOnlyLogin(lastUsername);
+                } else { 
+                    getEl('login-screen').classList.add('flex');
+                    getEl('login-screen').classList.remove('hidden');
+                    getEl('full-login-view').classList.remove('hidden');
+                    getEl('pin-only-login-view').classList.add('hidden');
+                }
+            } else {
+                // No user at all. Start the anonymous sign-in process.
+                if (isAttemptingAnonymousSignIn) return;
+                isAttemptingAnonymousSignIn = true;
+                try {
+                    await signInAnonymously(auth);
+                } catch (error) {
+                    console.error("Anonymous sign-in failed:", error);
+                     if (error.code === 'auth/too-many-requests') {
+                         getEl('login-screen').innerHTML = `<div class="text-center text-yellow-400">Connection temporarily blocked due to too many requests. Please refresh in a minute.</div>`;
+                     } else {
+                         getEl('login-screen').innerHTML = `<div class="text-center text-red-400">Could not connect to the server. Please check your internet connection and refresh the page.</div>`;
+                     }
+                      getEl('login-screen').classList.add('flex');
+                } finally {
+                    isAttemptingAnonymousSignIn = false;
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
