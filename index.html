@@ -1432,53 +1432,6 @@ async function loadSubjects(collectionName, containerId, forceRefresh = false) {
         getEl('login-screen').classList.remove('hidden');
     }
 
-
-// Get the Telegram Web App object
-const tg = window.Telegram.WebApp;
-
-document.addEventListener("DOMContentLoaded", function() {
-    // Check if the Web App is running in Telegram
-    if (tg.initDataUnsafe.user) {
-        const userInfo = tg.initDataUnsafe.user;
-        const userInfoDiv = document.getElementById('user-info');
-
-        // Display user's first name and language
-        userInfoDiv.innerHTML = `
-            <p>Hello, <strong>${userInfo.first_name}!</strong></p>
-            <p>Your Telegram language is: ${userInfo.language_code}</p>
-        `;
-
-        // --- CALL THE AD FUNCTION HERE ---
-        // This will attempt to show an ad based on your settings
-        show_9880333({
-            type: 'inApp',
-            inAppSettings: {
-                frequency: 2,
-                capping: 0.1,
-                interval: 30,
-                timeout: 5,
-                everyPage: false
-            }
-        });
-        // ------------------------------------
-
-    } else {
-         document.getElementById('user-info').innerHTML = "<p>Please open this in the Telegram app.</p>";
-    }
-
-    // Get the close button
-    const closeButton = document.getElementById('close-btn');
-    
-    // Add a click event listener to the close button
-    closeButton.addEventListener('click', () => {
-        // This function closes the Mini App
-        tg.close();
-    });
-});
-
-
-    
-
     function initializeAppEventListeners() {
         getDeviceId(); // Ensure device ID exists on first load
         getEl('login-btn').addEventListener('click', handleLogin);
@@ -1589,4 +1542,5 @@ document.addEventListener("DOMContentLoaded", function() {
 </body>
 
 </html>
+
 
