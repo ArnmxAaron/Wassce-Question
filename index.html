@@ -19,7 +19,7 @@
           }
         };
     </script>
-                <script src='//libtl.com/sdk.js' data-zone='9880333' data-sdk='show_9880333'></script>
+         <script src='//libtl.com/sdk.js' data-zone='9880333' data-sdk='show_9880333'></script>
     <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
     <style>
         :root {
@@ -154,339 +154,201 @@
             transform: translateY(0);
             opacity: 1;
         }
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            background-color: var(--bg-main);
-            padding-top: 1.5rem;
-            padding-bottom: 1rem;
-            z-index: 10;
-        }
+       
     </style>
 </head>
 <body class="overscroll-none">
-
 <div id="custom-alert-modal" class="custom-alert-modal fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[100] hidden">
-    <div class="custom-alert-content bg-slate-800 rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-sm m-4 text-center border border-slate-700">
-        <div id="custom-alert-icon" class="text-5xl mb-4"></div>
-        <h3 id="custom-alert-title" class="text-xl font-bold text-gray-100 mb-2">Alert</h3>
-        <p id="custom-alert-message" class="text-gray-300 mb-6">This is an alert message.</p>
-        <button id="custom-alert-close-btn" class="w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-2.5 rounded-lg transition-colors">OK</button>
-    </div>
+<div class="custom-alert-content bg-slate-800 rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-sm m-4 text-center border border-slate-700">
+<div id="custom-alert-icon" class="text-5xl mb-4"></div>
+<h3 id="custom-alert-title" class="text-xl font-bold text-gray-100 mb-2">Alert</h3>
+<p id="custom-alert-message" class="text-gray-300 mb-6">This is an alert message.</p>
+<button id="custom-alert-close-btn" class="w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-2.5 rounded-lg transition-colors">OK</button></div>
 </div>
-
 <div id="login-screen" class="hidden items-center justify-center min-h-screen p-4 text-center">
-    <div class="w-full max-w-md">
-        <div id="full-login-view">
-            <i class="fas fa-graduation-cap text-5xl text-amber-400 mb-4"></i>
-            <h1 id="login-header-text" class="text-3xl font-bold text-gray-100 mb-2">WASS Pupils</h1>
-            <p id="login-subheader-text" class="text-gray-400 mb-8">Please enter your credentials to continue.</p>
-            <div class="space-y-6 text-left">
-                <div>
-                    <label for="username-input" class="block text-sm font-medium text-gray-300 mb-2">Username</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-user text-gray-400"></i></span>
-                        <input type="text" id="username-input" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Enter your username">
-                    </div>
-                </div>
-                <div>
-                    <label for="pin-input" class="block text-sm font-medium text-gray-300 mb-2">PIN</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-key text-gray-400"></i></span>
-                        <input type="password" id="pin-input" maxlength="6" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Enter your PIN">
-                    </div>
-                </div>
-            </div>
-            <button id="login-btn" class="mt-8 w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-3 rounded-lg text-lg transition-colors shadow-lg shadow-amber-500/20">Login</button>
-            <p class="text-center text-sm text-gray-400 mt-6">
-                <a href="#" id="no-account-link" class="hover:text-amber-400 hover:underline">Don't have an account? Get details</a>
-            </p>
-            
-            <div class="relative flex py-5 items-center">
-                <div class="flex-grow border-t border-slate-600"></div>
-                <span class="flex-shrink mx-4 text-gray-400 text-sm">OR</span>
-                <div class="flex-grow border-t border-slate-600"></div>
-            </div>
-            <button id="free-version-btn" class="w-full bg-slate-700 hover:bg-slate-600 text-gray-200 font-bold py-3 rounded-lg text-lg transition-colors">Try Free Version</button>
-
-        </div>
-
-        <div id="pin-only-login-view" class="hidden">
-            <img id="pin-login-avatar" src="" alt="User Avatar" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-slate-700">
-            <h1 id="pin-login-welcome-text" class="text-3xl font-bold text-gray-100 mb-2">Welcome Back!</h1>
-            <p class="text-gray-400 mb-8">Please enter your PIN to continue.</p>
-            <div class="space-y-6 text-left">
-                <div>
-                    <label for="pin-only-input" class="block text-sm font-medium text-gray-300 mb-2">PIN</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-key text-gray-400"></i></span>
-                        <input type="password" id="pin-only-input" maxlength="6" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Enter your PIN">
-                    </div>
-                </div>
-            </div>
-            <button id="pin-login-btn" class="mt-8 w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-3 rounded-lg text-lg transition-colors shadow-lg shadow-amber-500/20">Unlock</button>
-             <p class="text-center text-sm text-gray-400 mt-6">
-                <a href="#" id="switch-account-link" class="hover:text-amber-400 hover:underline">Not you? Use another account</a>
-            </p>
-        </div>
-    </div>
+<div class="w-full max-w-md">
+<div id="full-login-view"><i class="fas fa-graduation-cap text-5xl text-amber-400 mb-4"></i>
+<h1 id="login-header-text" class="text-3xl font-bold text-gray-100 mb-2">WASS Pupils</h1>
+<p id="login-subheader-text" class="text-gray-400 mb-8">Please enter your credentials to continue.</p>
+<div class="space-y-6 text-left">
+<div><label for="username-input" class="block text-sm font-medium text-gray-300 mb-2">Username</label>
+<div class="relative"><span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-user text-gray-400"></i></span> <input type="text" id="username-input" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Enter your username" /></div>
 </div>
-
+<div><label for="pin-input" class="block text-sm font-medium text-gray-300 mb-2">PIN</label>
+<div class="relative"><span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-key text-gray-400"></i></span> <input type="password" id="pin-input" maxlength="6" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Enter your PIN" /></div>
+</div>
+</div>
+<button id="login-btn" class="mt-8 w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-3 rounded-lg text-lg transition-colors shadow-lg shadow-amber-500/20">Login</button>
+<p class="text-center text-sm text-gray-400 mt-6"><a href="#" id="no-account-link" class="hover:text-amber-400 hover:underline">Don't have an account? Get details</a></p>
+<div class="relative flex py-5 items-center">
+<div class="flex-grow border-t border-slate-600"></div>
+<span class="flex-shrink mx-4 text-gray-400 text-sm">OR</span>
+<div class="flex-grow border-t border-slate-600"></div>
+</div>
+<button id="free-version-btn" class="w-full bg-slate-700 hover:bg-slate-600 text-gray-200 font-bold py-3 rounded-lg text-lg transition-colors">Try Free Version</button></div>
+<div id="pin-only-login-view" class="hidden"><img id="pin-login-avatar" alt="User Avatar" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-slate-700" />
+<h1 id="pin-login-welcome-text" class="text-3xl font-bold text-gray-100 mb-2">Welcome Back!</h1>
+<p class="text-gray-400 mb-8">Please enter your PIN to continue.</p>
+<div class="space-y-6 text-left">
+<div><label for="pin-only-input" class="block text-sm font-medium text-gray-300 mb-2">PIN</label>
+<div class="relative"><span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-key text-gray-400"></i></span> <input type="password" id="pin-only-input" maxlength="6" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Enter your PIN" /></div>
+</div>
+</div>
+<button id="pin-login-btn" class="mt-8 w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-3 rounded-lg text-lg transition-colors shadow-lg shadow-amber-500/20">Unlock</button>
+<p class="text-center text-sm text-gray-400 mt-6"><a href="#" id="switch-account-link" class="hover:text-amber-400 hover:underline">Not you? Use another account</a></p>
+</div>
+</div>
+</div>
 <div id="access-code-screen" class="hidden items-center justify-center min-h-screen p-4 text-center">
-    <div id="access-code-content" class="w-full max-w-md">
-        <i class="fas fa-shield-alt text-5xl text-amber-400 mb-4"></i>
-        <h1 class="text-3xl font-bold text-gray-100 mb-2">Device Activation</h1>
-        <p class="text-gray-400 mb-8">Enter your one-time access code to secure this device to your account.</p>
-        <div class="space-y-6 text-left">
-            <div>
-                <label for="access-code-input" class="block text-sm font-medium text-gray-300 mb-2">Access Code</label>
-                <div class="relative">
-                     <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-ticket-alt text-gray-400"></i></span>
-                    <input type="text" id="access-code-input" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="e.g., ABC-123-XYZ">
-                </div>
-            </div>
-        </div>
-        <button id="activate-btn" class="mt-8 w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-3 rounded-lg text-lg transition-colors shadow-lg shadow-amber-500/20">Activate Device</button>
-    </div>
+<div id="access-code-content" class="w-full max-w-md"><i class="fas fa-shield-alt text-5xl text-amber-400 mb-4"></i>
+<h1 class="text-3xl font-bold text-gray-100 mb-2">Device Activation</h1>
+<p class="text-gray-400 mb-8">Enter your one-time access code to secure this device to your account.</p>
+<div class="space-y-6 text-left">
+<div><label for="access-code-input" class="block text-sm font-medium text-gray-300 mb-2">Access Code</label>
+<div class="relative"><span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-ticket-alt text-gray-400"></i></span> <input type="text" id="access-code-input" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="e.g., ABC-123-XYZ" /></div>
 </div>
-
+</div>
+<button id="activate-btn" class="mt-8 w-full bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold py-3 rounded-lg text-lg transition-colors shadow-lg shadow-amber-500/20">Activate Device</button></div>
+</div>
 <div id="main-app" class="hidden h-screen flex-col">
-    <div class="flex h-full bg-slate-900">
-        <aside id="sidebar" class="sidebar fixed inset-y-0 left-0 bg-slate-800 w-64 p-6 shadow-lg transform -translate-x-full md:relative md:translate-x-0 z-50 border-r border-slate-700">
-            <div class="flex items-center mb-10">
-                <i class="fas fa-graduation-cap text-3xl text-amber-400"></i>
-                <h1 class="text-2xl font-bold ml-3 text-gray-100">WASS Pupils</h1>
-            </div>
-            <nav class="flex flex-col h-[calc(100%-120px)]">
-                <div class="flex-grow space-y-2">
-                    <a href="#about" class="sidebar-link nav-link flex items-center py-3 px-4 rounded-lg text-gray-300">
-                        <i class="fas fa-info-circle w-6 text-center text-gray-400 text-lg"></i><span class="ml-4 font-medium">About App</span>
-                    </a>
-                </div>
-                <div class="mt-auto">
-                    <a href="#" id="logout-btn" class="sidebar-link flex items-center py-3 px-4 rounded-lg text-red-400 hover:bg-red-500 hover:text-white">
-                        <i class="fas fa-sign-out-alt w-6 text-center text-lg"></i><span class="ml-4 font-medium">Logout</span>
-                    </a>
-                </div>
-            </nav>
-        </aside>
-
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <header id="main-header" class="flex justify-between items-center p-4 sm:p-6 bg-slate-800 border-b border-slate-700">
-                <div class="flex items-center">
-                    <button id="menu-btn" class="text-gray-300 focus:outline-none md:hidden mr-4"><i class="fas fa-bars text-xl"></i></button>
-                    <div>
-                        <h2 id="header-title" class="text-lg sm:text-xl font-bold text-gray-100">Welcome!</h2>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2 sm:space-x-4">
-                     <div class="relative">
-                         <button id="notification-btn" class="text-gray-300 text-xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-700 transition-colors">
-                             <i class="fas fa-bell"></i>
-                         </button>
-                         <div id="notification-badge" class="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white hidden"></div>
-                     </div>
-                    <img id="header-profile-pic" src="" alt="Profile" class="w-10 h-10 rounded-full cursor-pointer object-cover ring-2 ring-offset-2 ring-offset-slate-800 ring-transparent hover:ring-amber-400 transition" />
-                </div>
-            </header>
-
-            <main class="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6 pb-24" style="background-color: #021130;">
-                <div id="main-pages-container">
-                    <div id="home-page" class="hidden fade-in-up space-y-6">
-                         <div class="flex items-center space-x-4">
-                             <img id="home-profile-pic" alt="Profile Picture" class="w-16 h-16 rounded-full object-cover ring-4 ring-amber-400/30">
-                             <div>
-                                 <p class="text-gray-400 text-lg">Welcome Back,</p>
-                                 <h1 id="home-welcome-name" class="text-3xl font-bold text-white"></h1>
-                                 <span id="home-user-status" class="text-xs font-semibold mt-1 px-2 py-0.5 rounded-full inline-block"></span>
-                             </div>
-                         </div>
-
-                        <div id="chat-with-admin-card" class="bg-slate-800 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-slate-700 transition">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 bg-emerald-500/20 rounded-lg flex items-center justify-center">
-                                    <i class="fas fa-headset text-2xl text-emerald-400"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-bold text-md text-gray-200">Support</h5>
-                                    <p class="text-sm text-gray-400">Chat with an Admin</p>
-                                </div>
-                            </div>
-                            <div id="unread-count-badge" class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white hidden">0</div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <h2 class="text-lg font-bold text-gray-100">Your Subjects</h2>
-                                <a href="#questions-2025" id="see-all-subjects-link" class="text-amber-400 hover:text-amber-300 font-semibold text-sm">See all</a>
-                            </div>
-                            <div id="unlocked-subjects-container" class="space-y-3"></div>
-                        </div>
-                    </div>
-
-                    <div id="profile-page" class="hidden fade-in-up">
-                        <div id="profile-display-view" class="text-center max-w-md mx-auto p-4 sm:p-8 w-full bg-slate-800 rounded-2xl border border-slate-700">
-                            <h2 class="text-2xl font-bold mb-4 text-gray-100">My Profile</h2>
-                            <div class="flex flex-col items-center space-y-4">
-                                <img id="profile-pic-display" alt="Profile Picture" class="w-32 h-32 rounded-full object-cover ring-4 ring-amber-400/30">
-                                <div class="flex flex-col items-center">
-                                    <h3 id="profile-name-display" class="text-2xl font-bold text-gray-100"></h3>
-                                    <span id="profile-status-display" class="text-sm font-bold mt-1 px-3 py-1 rounded-full"></span>
-                                </div>
-                                <div class="w-full text-left space-y-3 pt-4 border-t border-slate-700">
-                                    <div class="flex justify-between items-center"><span class="text-gray-400 font-medium">Username:</span><span id="profile-username-display" class="font-semibold text-gray-200"></span></div>
-                                    <div class="flex justify-between items-center"><span class="text-gray-400 font-medium">User ID:</span><span id="profile-uid-display" class="text-xs font-mono text-gray-500"></span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="videos-page" class="hidden">
-                        <div class="flex flex-col lg:flex-row -m-4 sm:-m-6 h-full">
-                            <div class="w-full lg:w-3/4 flex flex-col">
-                                <div class="sticky top-0 z-10 p-4 sm:p-6" style="background-color: #021130;">
-                                    <div class="responsive-video-container bg-black rounded-lg shadow-lg overflow-hidden mb-4">
-                                        <iframe id="video-player" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                    </div>
-                                    <div class="bg-slate-800 p-4 rounded-lg shadow">
-                                        <h1 id="video-title" class="text-xl font-bold text-gray-100 mb-1">Select a video</h1>
-                                        <p id="video-description" class="text-sm text-gray-300">Description will appear here.</p>
-                                    </div>
-                                </div>
-                                <div id="mobile-playlist-wrapper" class="p-4 sm:p-6 flex-grow overflow-y-auto lg:hidden"></div>
-                            </div>
-                            <aside id="desktop-playlist-wrapper" class="w-full lg:w-1/4 p-4 sm:p-6 lg:border-l lg:border-slate-700 hidden lg:block lg:overflow-y-auto"></aside>
-                        </div>
-                    </div>
-
-                   <div id="questions-2025-page" class="hidden fade-in-up">
-                        <div class="sticky top-0 bg-inherit -mx-4 sm:-mx-6 px-4 sm:px-6 pt-4">
-                            <div class="bg-inherit pb-4">
-                               <h2 id="questions-2025-title" class="font-bold text-gray-100 mb-4" style="font-size: 0.92rem;"></h2>
-                                <div class="flex justify-between items-center gap-4">
-                                    <div class="relative flex-grow">
-                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span>
-                                        <input type="text" id="questions-2025-search" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Search for a subject...">
-                                    </div>
-                                    <div id="questions-2025-count" class="text-gray-400 font-semibold flex-shrink-0"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="questions-2025-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                    </div>
-
-                    <div id="wassce-trial-page" class="hidden fade-in-up">
-                        <div class="sticky top-0 bg-inherit -mx-4 sm:-mx-6 px-4 sm:px-6 pt-4">
-                             <div class="bg-inherit pb-4">
-                                <h2 id="wassce-trial-title" class="font-bold text-gray-100 mb-4" style="font-size: 0.92rem;"></h2>
-                                <div class="flex justify-between items-center gap-4">
-                                    <div class="relative flex-grow">
-                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span>
-                                        <input type="text" id="wassce-trial-search" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Search for a subject...">
-                                    </div>
-                                    <div id="wassce-trial-count" class="text-gray-400 font-semibold flex-shrink-0"></div>
-                                </div>
-                             </div>
-                        </div>
-                        <div id="wassce-trial-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                    </div>
-                    
-                    <div id="about-page" class="hidden fade-in-up bg-slate-800 p-6 rounded-lg shadow-md max-w-3xl mx-auto">
-                        <h2 class="text-2xl font-bold text-gray-100 mb-4">About Wassce Questions</h2>
-                        <div id="about-page-content" class="text-gray-300 space-y-4"></div>
-                    </div>
-                    
-                    <div id="notifications-page" class="hidden fade-in-up">
-                        <div class="max-w-3xl mx-auto">
-                            <h2 class="text-2xl font-bold text-gray-100 mb-6">Notifications</h2>
-                            <div id="notifications-container" class="space-y-4">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-
-            <nav id="bottom-nav" class="bottom-nav fixed bottom-0 left-0 right-0 bg-slate-800 border-t border-slate-700 flex justify-around items-center py-2 z-50">
-                <a href="#home" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400">
-                    <i class="fas fa-home text-xl text-indigo-400"></i>
-                    <span class="text-xs mt-1">Home</span>
-                </a>
-                <a href="#chatroom" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400 relative">
-                    <i class="fas fa-comments text-xl text-teal-400"></i>
-                    <span class="text-xs mt-1">Chatroom</span>
-                </a>
-                <a href="#videos" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400">
-                    <i class="fas fa-video text-xl text-pink-400"></i>
-                    <span class="text-xs mt-1">Videos</span>
-                </a>
-                <a href="#questions-2025" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400">
-                    <i class="fas fa-book-open text-xl text-sky-400"></i>
-                    <span class="text-xs mt-1">2025 Qs</span>
-                </a>
-                <a href="#wassce-trial" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400">
-                    <i class="fas fa-file-alt text-xl text-amber-400"></i>
-                    <span class="text-xs mt-1">Trial Qs</span>
-                </a>
-            </nav>
-        </div>
-    </div>
+<div class="flex h-full bg-slate-900">
+<aside id="sidebar" class="sidebar fixed inset-y-0 left-0 bg-slate-800 w-64 p-6 shadow-lg transform -translate-x-full md:relative md:translate-x-0 z-50 border-r border-slate-700">
+<div class="flex items-center mb-10"><i class="fas fa-graduation-cap text-3xl text-amber-400"></i>
+<h1 class="text-2xl font-bold ml-3 text-gray-100">WASS Pupils</h1>
 </div>
-
-<div id="subject-viewer-page" class="hidden subject-content-viewer">
-     <header class="viewer-header flex items-center">
-         <button id="subject-viewer-back-btn" class="text-gray-200 text-xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-700 transition-colors mr-2">
-             <i class="fas fa-arrow-left"></i>
-         </button>
-         <h2 id="subject-viewer-title" class="text-xl font-bold text-gray-100 truncate flex-1">Subject Content</h2>
-     </header>
-     <div class="content-body-wrapper content-body">
-         <div id="subject-viewer-content"></div>
-     </div>
+<nav class="flex flex-col h-[calc(100%-120px)]">
+<div class="flex-grow space-y-2"><a href="#about" class="sidebar-link nav-link flex items-center py-3 px-4 rounded-lg text-gray-300"> <i class="fas fa-info-circle w-6 text-center text-gray-400 text-lg"></i><span class="ml-4 font-medium">About App</span> </a></div>
+<div class="mt-auto"><a href="#" id="logout-btn" class="sidebar-link flex items-center py-3 px-4 rounded-lg text-red-400 hover:bg-red-500 hover:text-white"> <i class="fas fa-sign-out-alt w-6 text-center text-lg"></i><span class="ml-4 font-medium">Logout</span> </a></div>
+</nav></aside>
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+<div class="flex-1 flex flex-col overflow-hidden"><header id="main-header" class="flex justify-between items-center p-4 sm:p-6 bg-slate-800 border-b border-slate-700">
+<div class="flex items-center"><button id="menu-btn" class="text-gray-300 focus:outline-none md:hidden mr-4"><i class="fas fa-bars text-xl"></i></button>
+<div>
+<h2 id="header-title" class="text-lg sm:text-xl font-bold text-gray-100">Welcome!</h2>
 </div>
-
-<div id="chat-page" class="hidden fixed inset-0 bg-slate-900 z-[99] flex flex-col">
-    <header class="flex items-center p-4 bg-slate-800 border-b border-slate-700 flex-shrink-0">
-        <button id="chat-back-btn" class="text-gray-300 mr-4"><i class="fas fa-arrow-left text-xl"></i></button>
-        <div class="flex items-center">
-            <h2 class="text-lg font-bold text-gray-100 mr-2">Admin Support</h2>
-            <i class="fas fa-check-circle text-blue-400"></i>
-        </div>
-        <div id="admin-status" class="ml-auto flex items-center text-xs">
-            <span id="admin-status-dot" class="w-2 h-2 rounded-full bg-gray-500 mr-2"></span>
-            <span id="admin-status-text">Offline</span>
-        </div>
-    </header>
-    <div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
-    <div id="typing-indicator" class="px-4 pb-2 text-sm text-gray-400 hidden">Admin is typing...</div>
-    <form id="message-form" class="p-4 bg-slate-800 border-t border-slate-700 flex items-center space-x-2 flex-shrink-0">
-        <input type="text" id="message-input" class="w-full p-3 border border-slate-600 rounded-full bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Type your message..." autocomplete="off">
-        <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
-            <i class="fas fa-paper-plane"></i>
-        </button>
-    </form>
 </div>
-
-<div id="chatroom-page" class="hidden fixed inset-0 bg-slate-900 z-[99] flex flex-col">
-    <header class="relative flex items-center justify-center p-4 bg-slate-800 border-b border-slate-700 flex-shrink-0">
-        <button id="chatroom-back-btn" class="absolute left-4 text-gray-300"><i class="fas fa-arrow-left text-xl"></i></button>
-        <div class="flex items-center">
-            <h2 class="text-lg font-bold text-gray-100 mr-2">Public Chatroom</h2>
-            <i class="fas fa-users text-blue-400"></i>
-        </div>
-    </header>
-    <div id="chatroom-messages-container" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
-    <form id="chatroom-message-form" class="p-4 bg-slate-800 border-t border-slate-700 flex items-center space-x-2 flex-shrink-0">
-        <input type="text" id="chatroom-message-input" class="w-full p-3 border border-slate-600 rounded-full bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Type your message..." autocomplete="off">
-        <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">
-            <i class="fas fa-paper-plane"></i>
-        </button>
-    </form>
+<div class="flex items-center space-x-2 sm:space-x-4">
+<div class="relative"><button id="notification-btn" class="text-gray-300 text-xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-700 transition-colors"> <i class="fas fa-bell"></i> </button>
+<div id="notification-badge" class="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white hidden"></div>
 </div>
-
-<div id="new-message-bubble" class="fixed bottom-20 right-4 z-[99] cursor-pointer hidden">
+<img id="header-profile-pic" alt="Profile" class="w-10 h-10 rounded-full cursor-pointer object-cover ring-2 ring-offset-2 ring-offset-slate-800 ring-transparent hover:ring-amber-400 transition" /></div>
+</header><main class="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6 pb-24" style="background-color: #021130;">
+<div id="main-pages-container">
+<div id="home-page" class="hidden fade-in-up space-y-6">
+<div class="flex items-center space-x-4"><img id="home-profile-pic" alt="Profile Picture" class="w-16 h-16 rounded-full object-cover ring-4 ring-amber-400/30" />
+<div>
+<p class="text-gray-400 text-lg">Welcome Back,</p>
+<h1 id="home-welcome-name" class="text-3xl font-bold text-white"></h1>
+<span id="home-user-status" class="text-xs font-semibold mt-1 px-2 py-0.5 rounded-full inline-block"></span></div>
 </div>
-
+<div id="chat-with-admin-card" class="bg-slate-800 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-slate-700 transition">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 bg-emerald-500/20 rounded-lg flex items-center justify-center"><i class="fas fa-headset text-2xl text-emerald-400"></i></div>
+<div>
+<h5 class="font-bold text-md text-gray-200">Support</h5>
+<p class="text-sm text-gray-400">Chat with an Admin</p>
+</div>
+</div>
+<div id="unread-count-badge" class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white hidden">0</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<h2 class="text-lg font-bold text-gray-100">Your Subjects</h2>
+<a href="#questions-2025" id="see-all-subjects-link" class="text-amber-400 hover:text-amber-300 font-semibold text-sm">See all</a></div>
+<div id="unlocked-subjects-container" class="space-y-3"></div>
+</div>
+</div>
+<div id="profile-page" class="hidden fade-in-up">
+<div id="profile-display-view" class="text-center max-w-md mx-auto p-4 sm:p-8 w-full bg-slate-800 rounded-2xl border border-slate-700">
+<h2 class="text-2xl font-bold mb-4 text-gray-100">My Profile</h2>
+<div class="flex flex-col items-center space-y-4"><img id="profile-pic-display" alt="Profile Picture" class="w-32 h-32 rounded-full object-cover ring-4 ring-amber-400/30" />
+<div class="flex flex-col items-center">
+<h3 id="profile-name-display" class="text-2xl font-bold text-gray-100"></h3>
+<span id="profile-status-display" class="text-sm font-bold mt-1 px-3 py-1 rounded-full"></span></div>
+<div class="w-full text-left space-y-3 pt-4 border-t border-slate-700">
+<div class="flex justify-between items-center"><span class="text-gray-400 font-medium">Username:</span><span id="profile-username-display" class="font-semibold text-gray-200"></span></div>
+<div class="flex justify-between items-center"><span class="text-gray-400 font-medium">User ID:</span><span id="profile-uid-display" class="text-xs font-mono text-gray-500"></span></div>
+</div>
+</div>
+</div>
+</div>
+<div id="videos-page" class="hidden">
+<div class="flex flex-col lg:flex-row -m-4 sm:-m-6 h-full">
+<div class="w-full lg:w-3/4 flex flex-col">
+<div class="sticky top-0 z-10 p-4 sm:p-6" style="background-color: #021130;">
+<div class="responsive-video-container bg-black rounded-lg shadow-lg overflow-hidden mb-4"><iframe id="video-player" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"></iframe></div>
+<div class="bg-slate-800 p-4 rounded-lg shadow">
+<h1 id="video-title" class="text-xl font-bold text-gray-100 mb-1">Select a video</h1>
+<p id="video-description" class="text-sm text-gray-300">Description will appear here.</p>
+</div>
+</div>
+<div id="mobile-playlist-wrapper" class="p-4 sm:p-6 flex-grow overflow-y-auto lg:hidden"></div>
+</div>
+<aside id="desktop-playlist-wrapper" class="w-full lg:w-1/4 p-4 sm:p-6 lg:border-l lg:border-slate-700 hidden lg:block lg:overflow-y-auto"></aside>
+</div>
+</div>
+<div id="questions-2025-page" class="hidden fade-in-up">
+<div class="sticky top-0 bg-inherit -mx-4 sm:-mx-6 px-4 sm:px-6 pt-4">
+<div class="bg-inherit pb-4">
+<h2 id="questions-2025-title" class="font-bold text-gray-100 mb-4" style="font-size: 0.92rem;"></h2>
+<div class="flex justify-between items-center gap-4">
+<div class="relative flex-grow"><span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span> <input type="text" id="questions-2025-search" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Search for a subject..." /></div>
+<div id="questions-2025-count" class="text-gray-400 font-semibold flex-shrink-0"></div>
+</div>
+</div>
+</div>
+<div id="questions-2025-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+</div>
+<div id="wassce-trial-page" class="hidden fade-in-up">
+<div class="sticky top-0 bg-inherit -mx-4 sm:-mx-6 px-4 sm:px-6 pt-4">
+<div class="bg-inherit pb-4">
+<h2 id="wassce-trial-title" class="font-bold text-gray-100 mb-4" style="font-size: 0.92rem;"></h2>
+<div class="flex justify-between items-center gap-4">
+<div class="relative flex-grow"><span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span> <input type="text" id="wassce-trial-search" class="w-full p-3 pl-10 border border-slate-600 rounded-lg bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Search for a subject..." /></div>
+<div id="wassce-trial-count" class="text-gray-400 font-semibold flex-shrink-0"></div>
+</div>
+</div>
+</div>
+<div id="wassce-trial-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+</div>
+<div id="about-page" class="hidden fade-in-up bg-slate-800 p-6 rounded-lg shadow-md max-w-3xl mx-auto">
+<h2 class="text-2xl font-bold text-gray-100 mb-4">About Wassce Questions</h2>
+<div id="about-page-content" class="text-gray-300 space-y-4"></div>
+</div>
+<div id="notifications-page" class="hidden fade-in-up">
+<div class="max-w-3xl mx-auto">
+<h2 class="text-2xl font-bold text-gray-100 mb-6">Notifications</h2>
+<div id="notifications-container" class="space-y-4"></div>
+</div>
+</div>
+</div>
+</main><nav id="bottom-nav" class="bottom-nav fixed bottom-0 left-0 right-0 bg-slate-800 border-t border-slate-700 flex justify-around items-center py-2 z-50"><a href="#home" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400"> <i class="fas fa-home text-xl text-indigo-400"></i> <span class="text-xs mt-1">Home</span> </a> <a href="#chatroom" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400 relative"> <i class="fas fa-comments text-xl text-teal-400"></i> <span class="text-xs mt-1">Chatroom</span> </a> <a href="#videos" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400"> <i class="fas fa-video text-xl text-pink-400"></i> <span class="text-xs mt-1">Videos</span> </a> <a href="#questions-2025" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400"> <i class="fas fa-book-open text-xl text-sky-400"></i> <span class="text-xs mt-1">2025 Qs</span> </a> <a href="#wassce-trial" class="bottom-nav-item nav-link flex flex-col items-center justify-center text-center w-1/5 text-gray-400"> <i class="fas fa-file-alt text-xl text-amber-400"></i> <span class="text-xs mt-1">Trial Qs</span> </a></nav></div>
+</div>
+</div>
+<div id="subject-viewer-page" class="hidden subject-content-viewer"><header class="viewer-header flex items-center"><button id="subject-viewer-back-btn" class="text-gray-200 text-xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-700 transition-colors mr-2"> <i class="fas fa-arrow-left"></i> </button>
+<h2 id="subject-viewer-title" class="text-xl font-bold text-gray-100 truncate flex-1">Subject Content</h2>
+</header>
+<div class="content-body-wrapper content-body">
+<div id="subject-viewer-content"></div>
+</div>
+</div>
+<div id="chat-page" class="hidden fixed inset-0 bg-slate-900 z-[99] flex flex-col"><header class="flex items-center p-4 bg-slate-800 border-b border-slate-700 flex-shrink-0"><button id="chat-back-btn" class="text-gray-300 mr-4"><i class="fas fa-arrow-left text-xl"></i></button>
+<div class="flex items-center">
+<h2 class="text-lg font-bold text-gray-100 mr-2">Admin Support</h2>
+<i class="fas fa-check-circle text-blue-400"></i></div>
+<div id="admin-status" class="ml-auto flex items-center text-xs"><span id="admin-status-dot" class="w-2 h-2 rounded-full bg-gray-500 mr-2"></span> <span id="admin-status-text">Offline</span></div>
+</header>
+<div id="messages-container" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+<div id="typing-indicator" class="px-4 pb-2 text-sm text-gray-400 hidden">Admin is typing...</div>
+<form id="message-form" class="p-4 bg-slate-800 border-t border-slate-700 flex items-center space-x-2 flex-shrink-0"><input type="text" id="message-input" class="w-full p-3 border border-slate-600 rounded-full bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Type your message..." autocomplete="off" /> <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0"> <i class="fas fa-paper-plane"></i> </button></form></div>
+<div id="chatroom-page" class="hidden fixed inset-0 bg-slate-900 z-[99] flex flex-col"><header class="relative flex items-center justify-center p-4 bg-slate-800 border-b border-slate-700 flex-shrink-0"><button id="chatroom-back-btn" class="absolute left-4 text-gray-300"><i class="fas fa-arrow-left text-xl"></i></button>
+<div class="flex items-center">
+<h2 class="text-lg font-bold text-gray-100 mr-2">Public Chatroom</h2>
+<i class="fas fa-users text-blue-400"></i></div>
+</header>
+<div id="chatroom-messages-container" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+<form id="chatroom-message-form" class="p-4 bg-slate-800 border-t border-slate-700 flex items-center space-x-2 flex-shrink-0"><input type="text" id="chatroom-message-input" class="w-full p-3 border border-slate-600 rounded-full bg-slate-900 text-gray-200 focus:ring-2 focus:ring-amber-400 focus:border-amber-400" placeholder="Type your message..." autocomplete="off" /> <button type="submit" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0"> <i class="fas fa-paper-plane"></i> </button></form></div>
+<div id="new-message-bubble" class="fixed bottom-20 right-4 z-[99] cursor-pointer hidden"></div>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, onSnapshot, query, where, orderBy, updateDoc, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -600,7 +462,7 @@
         getEl('main-app').classList.remove('hidden');
         getEl('main-app').classList.add('flex');
 
-        // ================== 2. AD FUNCTION CALLED HERE ==================
+         // ================== 2. AD FUNCTION CALLED HERE ==================
         // We call the ad function after the user logs in and the main app is ready.
         if (typeof show_9880333 === 'function') {
             show_9880333({
@@ -1257,7 +1119,7 @@
         }
     }
 
-    async function handleSendMessage(e) {
+   async function handleSendMessage(e) {
         e.preventDefault();
         const messageInput = getEl('message-input');
         const text = messageInput.value.trim();
@@ -1266,17 +1128,38 @@
         const originalText = text;
         messageInput.value = '';
         const messagesRef = collection(db, 'chats', currentUserId, 'messages');
+
         try {
-            await addDoc(messagesRef, {
+            // This part remains the same: send the message to the chat subcollection.
+            const messageDoc = await addDoc(messagesRef, {
                 text: originalText,
                 senderId: currentUserId,
                 timestamp: serverTimestamp(),
                 status: 'sent' 
             });
+
+            // --- NEW LOGIC FOR GUESTS ---
+            // If the user is a guest, create a discoverable entry for the admin.
+            if (currentUserData.isGuest) {
+                const guestChatRef = doc(db, 'guest_chats', currentUserId);
+                const guestChatDoc = await getDoc(guestChatRef);
+
+                // Only create the entry if it doesn't already exist (i.e., on the first message)
+                if (!guestChatDoc.exists()) {
+                    await setDoc(guestChatRef, {
+                        guestId: currentUserId,
+                        firstMessage: originalText,
+                        timestamp: serverTimestamp(),
+                        hasUnread: true // A flag for the admin panel to easily filter
+                    });
+                }
+            }
+            // --- END OF NEW LOGIC ---
+
         } catch (error) {
             console.error("Error sending message:", error);
             showCustomAlert('Error', 'Could not send message.', 'fas fa-times-circle text-red-400');
-            messageInput.value = originalText;
+            messageInput.value = originalText; // Restore message on failure
         }
     }
 
